@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { t } from '#lib/i18n.svelte.ts';
-  import { openSignup } from '#lib/signup.svelte.ts';
   import { onScrollFrame } from '#lib/utils.ts';
+  import ContactButton from './ContactButton.svelte';
   import LangSwitch from './LangSwitch.svelte';
   import Logo from './Logo.svelte';
 
@@ -35,7 +34,7 @@
     <Logo />
     <div class="nav-right">
       <LangSwitch />
-      <button class="btn btn-dark nav-cta" onclick={openSignup}><span>{t('cta')}</span></button>
+      <ContactButton extraClass="nav-cta" />
     </div>
   </div>
 </header>
