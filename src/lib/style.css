@@ -442,7 +442,21 @@ body.ready .hero-content > :nth-child(4) { transition-delay: .3s; }
 
 /* ---------- final + footer ---------- */
 .final { padding: 160px 16px 140px; text-align: center; color: var(--on-dark); }
-.final .lead { color: var(--on-dark-2); margin-bottom: 34px; }
+.final .lead { color: var(--on-dark-2); margin-bottom: 38px; }
+.final .scribble { width: 100%; stroke: var(--blue); }
+.final .h2.is-in .scribble path { stroke-dashoffset: 0; }
+.final-cta { position: relative; display: inline-block; }
+.final-note { position: absolute; left: calc(100% + 12px); top: -34px; display: flex; align-items: flex-start; gap: 4px; font-family: var(--script); font-size: 26px; line-height: 1; color: var(--on-dark); white-space: nowrap; rotate: -4deg; opacity: 0; transition: opacity .5s var(--ease) 1s; }
+.final-note svg { width: 48px; height: 32px; margin-top: 14px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.final-note .draw { stroke-dasharray: 80; stroke-dashoffset: 80; transition: stroke-dashoffset .8s var(--ease) 1.2s; }
+.final-cta.is-in .final-note { opacity: 1; }
+.final-cta.is-in .final-note .draw { stroke-dashoffset: 0; }
+.final-copy { display: block; margin: 22px auto 0; padding: 4px 8px; background: none; border: 0; color: var(--on-dark-2); font-size: 15px; }
+.final-copy u { text-underline-offset: 3px; text-decoration-color: rgba(255, 255, 255, .3); transition: color .2s, text-decoration-color .2s; }
+.final-copy:hover u { color: var(--on-dark); text-decoration-color: currentColor; }
+.final-toast { display: block; height: 22px; margin-top: 6px; font-family: var(--script); font-size: 22px; color: var(--blue); opacity: 0; transition: opacity .3s; }
+.final-toast.on { opacity: 1; }
+@media (max-width: 768px) { .final-note { display: none; } }
 .footer { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; max-width: 1240px; margin: 0 auto; padding: 30px 24px 40px; border-top: 1px solid rgba(255, 255, 255, .1); color: var(--on-dark-2); font-size: 14px; }
 .footer .logo { color: #fff; font-size: 18px; margin: 0; padding: 0; }
 .footer nav { display: flex; gap: 22px; }

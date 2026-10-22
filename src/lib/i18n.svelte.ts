@@ -42,8 +42,12 @@ const english = {
     "f3.a": "Find me",
     "f3.b": "around the web",
     "social.newTab": "opens in a new tab",
-    "final.title": "Have a project in mind?",
+    "final.title": "Have a project",
+    "final.titleMark": "in mind?",
     "final.sub": "Tell me about it. I reply within a day.",
+    "final.note": "say hi!",
+    "final.or": "or copy",
+    "final.copied": "Copied",
 };
 
 export type DictKey = keyof typeof english;
@@ -88,8 +92,12 @@ const dict: Record<Lang, Record<DictKey, string>> = {
         "f3.a": "ติดตามผม",
         "f3.b": "ได้ทุกช่องทาง",
         "social.newTab": "เปิดในแท็บใหม่",
-        "final.title": "มีโปรเจกต์ในใจไหม?",
+        "final.title": "มีโปรเจกต์",
+        "final.titleMark": "ในใจไหม?",
         "final.sub": "เล่ามาได้เลย ตอบกลับภายในหนึ่งวัน",
+        "final.note": "ทักมาได้เลย!",
+        "final.or": "หรือคัดลอก",
+        "final.copied": "คัดลอกแล้ว",
     },
 };
 
