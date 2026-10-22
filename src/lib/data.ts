@@ -27,7 +27,7 @@ export const heroShots: HeroShot[] = [
   { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, src: shot('sigmalearn', 'past-papers.webp'), logo: shot('sigmalearn', 'logo.svg'), title: 'Sigma Learn', caption: 'Next.js · EdTech' },
   { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, art: 'schema', tech: 'PostgreSQL', title: 'schema.sql', caption: 'PostgreSQL', isMidLayer: true },
   { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, art: 'api', tech: 'TypeScript', title: 'GET /orders/1042', caption: 'TypeScript API' },
-  { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, src: shot('portfolio', 'home.webp'), logo: '/favicon.svg', title: 'This portfolio', caption: 'SvelteKit · 2026' },
+  { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, src: shot('portfolio', 'home.webp'), logo: '/logo.webp', title: 'This portfolio', caption: 'SvelteKit · 2026' },
 ];
 
 /** Hero tech stack, in display order. */
@@ -116,7 +116,7 @@ export const projects: Project[] = [
   },
   {
     id: 'portfolio', label: 'This portfolio',
-    name: 'Portfolio site', logo: '/favicon.svg', year: '2026',
+    name: 'Portfolio site', logo: '/logo.webp', year: '2026',
     summary: 'The site you’re on: a scroll-driven, bilingual landing page built as typed Svelte components.',
     description: 'Started as a single imperative script and refactored into typed Svelte 5 components with rune-based i18n, a Memoji intro and a handwritten signature, prerendered to static HTML.',
     myRole: 'Design & engineering',

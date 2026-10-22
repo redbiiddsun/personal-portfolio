@@ -109,7 +109,7 @@ svg { display: block; }
 .nav.at-top .logo { background: rgba(255, 255, 255, .7); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
 .nav.dark .nav-pill { background: rgba(48, 54, 68, .62); color: #fff; box-shadow: 0 10px 30px rgba(0, 0, 0, .25); }
 .logo { display: inline-flex; align-items: center; gap: 7px; text-decoration: none; font-weight: 600; font-size: 21px; letter-spacing: -.02em; padding: 8px 14px; margin-left: -14px; border-radius: 999px; transition: background .4s; }
-.logo svg { width: 22px; height: 22px; fill: currentColor; }
+.logo img { width: 30px; height: 30px; }
 .nav-right { display: flex; align-items: center; gap: 8px; }
 .nav-cta { max-width: 0; padding-left: 0; padding-right: 0; opacity: 0; overflow: hidden; transition: max-width .5s var(--ease), padding .5s var(--ease), opacity .3s; }
 .nav.show-cta .nav-cta { max-width: 200px; padding: 12px 22px; opacity: 1; }
