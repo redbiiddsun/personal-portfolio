@@ -1,6 +1,6 @@
 // Portfolio content. Everything marked PLACEHOLDER is sample copy:
 // replace it with your real projects, numbers, screenshots and client quotes before publishing.
-import type { HeroShot, Highlight, Project, StickyNote, TechLogo, Testimonial } from './types';
+import type { HeroImageShot, HeroShot, Highlight, Project, StickyNote, TechLogo, Testimonial } from './types';
 
 export const OWNER = {
   name: 'Phanasorn Srisayam',
@@ -20,19 +20,19 @@ export const highlightImage = (highlight: Highlight) => img(highlight.seed, 300,
 export const bannerImage = (seed: string) => img(seed, 900, 300);
 export const logoImage = (seed: string) => img(seed, 160, 160);
 /** Hero shots render at CSS size, so fetch at 2x for sharpness. */
-export const heroShotImage = (shot: HeroShot) => img(shot.seed, shot.width * 2, shot.height * 2);
+export const heroShotImage = (shot: HeroImageShot) => img(shot.seed, shot.width * 2, shot.height * 2);
 
-// PLACEHOLDER screenshots: swap seeds for real project images.
+// PLACEHOLDER screenshots: swap seeds for real project images. The `art` cards are drawn in HTML (DevArt.svelte).
 export const heroShots: HeroShot[] = [
   { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, seed: 'dashboard-ui', title: 'Pulse Analytics', caption: 'SvelteKit · 2025' },
-  { side: 'left', offsetX: 8, offsetY: -5, width: 150, height: 120, rotation: 3, depth: 0.3, seed: 'studio-desk', title: 'Dev setup', caption: 'Bangkok' },
+  { side: 'left', offsetX: 8, offsetY: -5, width: 150, height: 120, rotation: 3, depth: 0.3, art: 'terminal', tech: 'Svelte', title: 'build.log', caption: 'Svelte · build' },
   { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, seed: 'phone-landing', title: 'Queue', caption: 'React Native · 2025', isMidLayer: true },
-  { side: 'left', offsetX: -1.5, offsetY: 45, width: 200, height: 160, rotation: -3, depth: 0.5, seed: 'resort-site', title: 'Resort booking', caption: 'Next.js · 2024', isMidLayer: true },
+  { side: 'left', offsetX: -1.5, offsetY: 45, width: 200, height: 160, rotation: -3, depth: 0.5, art: 'code', tech: 'NestJS', title: 'orders.controller.ts', caption: 'NestJS', isMidLayer: true },
   { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, seed: 'shop-mock', title: 'Mercado shop', caption: 'E-commerce · 2024' },
   { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, seed: 'server-green', title: 'Platform API', caption: 'Node.js · 2025' },
   { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, seed: 'glass-ui', title: 'Helpdesk AI', caption: 'LLM · 2025' },
-  { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, seed: 'cafe-site', title: 'Café site', caption: 'Svelte · 2024', isMidLayer: true },
-  { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, seed: 'brand-cards', title: 'Design system', caption: 'Figma → code' },
+  { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, art: 'schema', tech: 'PostgreSQL', title: 'schema.sql', caption: 'PostgreSQL', isMidLayer: true },
+  { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, art: 'api', tech: 'TypeScript', title: 'GET /orders/1042', caption: 'TypeScript API' },
   { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, seed: 'poster-grid', title: 'This portfolio', caption: 'SvelteKit · 2026' },
 ];
 

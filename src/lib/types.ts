@@ -1,7 +1,9 @@
 export type Lang = 'en' | 'th';
 
-/** A screenshot in the hero collage. */
-export interface HeroShot {
+export type DevArtKind = 'code' | 'terminal' | 'schema' | 'api';
+
+/** A card in the hero collage: a project screenshot, or an HTML-drawn dev artefact. */
+interface HeroShotBase {
   side: 'left' | 'right';
   /** Horizontal offset from `side`, in % of the hero width. */
   offsetX: number;
@@ -12,11 +14,16 @@ export interface HeroShot {
   rotation: number;
   /** Parallax strength, 0–1. */
   depth: number;
-  seed: string;
   isMidLayer?: boolean;
   title: string;
   caption: string;
 }
+
+export type HeroImageShot = HeroShotBase & { seed: string };
+/** `tech` names a `techStack` entry whose logo is shown as the card's icon. */
+export type HeroDevShot = HeroShotBase & { art: DevArtKind; tech: TechName };
+export type HeroShot = HeroImageShot | HeroDevShot;
+
 
 export type TechName = 'TypeScript' | 'NestJS' | 'Svelte' | 'PostgreSQL';
 

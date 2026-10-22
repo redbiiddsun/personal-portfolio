@@ -3,6 +3,7 @@
   import { onMount } from 'svelte';
   import { heroShotImage, heroShots } from '#lib/data.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
+  import DevArt from './DevArt.svelte';
   import { SWEEP_COLORS } from './Sweep.svelte';
 
   let { cards }: { cards: HTMLElement[] } = $props();
@@ -120,7 +121,9 @@
     body.add('intro-on');
     radius = Math.min(innerWidth * RADIUS_WIDTH_RATIO, innerHeight * RADIUS_HEIGHT_RATIO, MAX_RADIUS_PX);
     // Fetch the ring shots while the greeting plays, so the ring appears fully loaded.
-    heroShots.forEach((shot) => (new Image().src = heroShotImage(shot)));
+    heroShots.forEach((shot) => {
+      if ('seed' in shot) new Image().src = heroShotImage(shot);
+    });
 
     let frame = 0;
     let isHandedOff = false;
@@ -215,7 +218,11 @@
         {#if radius}
           {#each heroShots as card, index (card.title)}
             <div class="ri" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
-              <img src={heroShotImage(card)} alt="" />
+              {#if 'seed' in card}
+                <img src={heroShotImage(card)} alt="" />
+              {:else}
+                <DevArt kind={card.art} />
+              {/if}
             </div>
           {/each}
         {/if}

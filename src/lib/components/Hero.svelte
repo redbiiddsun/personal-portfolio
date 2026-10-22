@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { heroShotImage, heroShots, logoImage } from '#lib/data.ts';
+  import { heroShotImage, heroShots, logoImage, techStack } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
   import { prefersReducedMotion } from '#lib/utils.ts';
+  import DevArt from './DevArt.svelte';
   import RotatingWord from './RotatingWord.svelte';
   import TechStack from './TechStack.svelte';
   import ContactButton from './ContactButton.svelte';
@@ -78,9 +79,20 @@
       >
         <div class="hc-par" bind:this={parallaxLayers[index]}>
           <div class="hc-body">
-            <img class="hc-img" src={heroShotImage(card)} alt="" />
+            {#if 'seed' in card}
+              <img class="hc-img" src={heroShotImage(card)} alt="" />
+            {:else}
+              <DevArt kind={card.art} />
+            {/if}
             <div class="hc-meta">
-              <span class="av"><img src={logoImage(card.seed)} alt="" /><i></i></span>
+              {#if 'seed' in card}
+                <span class="av"><img src={logoImage(card.seed)} alt="" /><i></i></span>
+              {:else}
+                {@const tech = techStack.find((logo) => logo.name === card.tech)}
+                {#if tech}
+                  <span class="av av-tech"><svg viewBox="0 0 24 24" fill={tech.color} aria-hidden="true"><path d={tech.path} /></svg></span>
+                {/if}
+              {/if}
               <span><b>{card.title}</b><small>{card.caption}</small></span>
             </div>
           </div>

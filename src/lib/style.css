@@ -148,6 +148,26 @@ body.ready .hc { opacity: 1; }
 }
 .hc-img { width: 100%; height: calc(var(--h) * var(--k, 1)); object-fit: cover; border-radius: 9px; background: var(--soft); }
 .hc-meta { display: flex; align-items: center; gap: 8px; padding: 8px 2px 0; }
+.av-tech svg { display: block; width: 26px; height: 26px; padding: 4px; border-radius: 50%; background: var(--soft); }
+
+/* ---------- hero dev cards (DevArt.svelte) ---------- */
+.dev-art { --dev-text: calc(8px * var(--k, 1)); overflow: hidden; padding: 1.1em 1.25em; font: 500 var(--dev-text) / 1.5 ui-monospace, SFMono-Regular, Menlo, monospace; text-align: left; }
+.dev-art pre { margin: 0; font: inherit; white-space: pre; }
+.dev-code, .dev-terminal { background: var(--dark); color: #d6dae3; }
+.dev-api { background: #f4f6fb; color: var(--ink); }
+.dev-schema { --dev-accent: #4169e1; display: grid; align-content: center; gap: 1.2em; background: #eef3ff; }
+.dev-table { background: var(--paper); border-radius: 6px; box-shadow: 0 1px 3px rgba(20, 24, 33, .12); overflow: hidden; }
+.dev-table b { display: block; padding: .5em .9em; background: var(--dev-accent); color: #fff; font-weight: 600; }
+.dev-col { display: flex; gap: .75em; padding: .25em .9em; border-top: 1px solid #eef0f4; }
+.dev-col em { margin-left: auto; font-style: normal; color: var(--ink-3); }
+.dev-col i { font-style: normal; font-weight: 600; color: var(--dev-accent); }
+.dev-key { font-weight: 600; }
+.tk-key { color: #c792ea; } .tk-dec { color: #ffcb6b; } .tk-str { color: #c3e88d; } .tk-type { color: #82aaff; }
+.tk-fn { color: #89ddff; } .tk-num { color: #f78c6c; } .tk-ok { color: #3ecf8e; } .tk-dim { color: #8a93a6; }
+.dev-api .tk-str { color: #2e8b57; } .dev-api .tk-type { color: #3157c8; } .dev-api .tk-num { color: #c2410c; }
+.dev-caret { display: inline-block; width: .6em; height: 1.1em; vertical-align: text-bottom; background: currentColor; animation: dev-blink 1s steps(1) infinite; }
+@keyframes dev-blink { 50% { opacity: 0; } }
+.ri .dev-art { height: 100%; --dev-text: 3.5px; }
 .hc-meta b { display: block; font-size: 11.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hc-meta small { display: block; font-size: 9.5px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hc-meta > span:last-child { min-width: 0; }
