@@ -18,6 +18,16 @@ export interface HeroShot {
   caption: string;
 }
 
+export type TechName = 'TypeScript' | 'NestJS' | 'Svelte' | 'PostgreSQL';
+
+export interface TechLogo {
+  name: TechName;
+  /** Brand colour for the logo. */
+  color: string;
+  /** Single SVG path in a 24×24 viewBox. */
+  path: string;
+}
+
 export interface CaseStudy {
   seed: string;
   title: string;
