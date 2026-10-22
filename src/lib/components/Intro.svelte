@@ -1,9 +1,8 @@
 <!-- Intro: a spinning ring of shots; each one then flies to its hero-card slot. -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { heroCards, img } from '#lib/data.ts';
+  import { heroShotImage, heroShots } from '#lib/data.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
-  import VinylArt from './VinylArt.svelte';
 
   let { cards }: { cards: HTMLElement[] } = $props();
 
@@ -30,7 +29,7 @@
   /** Replaced on mount; clicking the ring before then is a no-op. */
   let handoff = () => {};
 
-  const slotAngle = (index: number) => (index * 360) / heroCards.length;
+  const slotAngle = (index: number) => (index * 360) / heroShots.length;
 
   /** Move every hero card onto its ring position instantly, then let it transition home. */
   const flyCardsHome = () => {
@@ -49,7 +48,7 @@
       card.style.opacity = '1';
       card.style.transform =
         `translate(${startX - (rect.left + rect.width / 2)}px, ${startY - (rect.top + rect.height / 2)}px) ` +
-        `rotate(${rotation - heroCards[index].rotation}deg) scale(${RING_ITEM_PX / rect.width})`;
+        `rotate(${rotation - heroShots[index].rotation}deg) scale(${RING_ITEM_PX / rect.width})`;
     });
     document.body.offsetWidth; // commit start positions before transitioning
     cards.forEach((card, index) => {
@@ -112,13 +111,9 @@
   >
     <div class="intro-ring" bind:this={ring} style:transform="rotate({angle}deg)">
       {#if radius}
-        {#each heroCards as card, index (card.name)}
+        {#each heroShots as card, index (card.title)}
           <div class="ri" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
-            {#if card.isVinyl}
-              <VinylArt isMini />
-            {:else}
-              <img src={img(card.seed!, card.width * 2, card.height * 2)} alt="" />
-            {/if}
+            <img src={heroShotImage(card)} alt="" />
           </div>
         {/each}
       {/if}

@@ -1,12 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { avatar, heroCards, img } from '#lib/data.ts';
+  import { heroShotImage, heroShots, logoImage } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
-  import { openSignup } from '#lib/signup.svelte.ts';
   import { prefersReducedMotion } from '#lib/utils.ts';
   import Countdown from './Countdown.svelte';
   import RotatingWord from './RotatingWord.svelte';
-  import VinylArt from './VinylArt.svelte';
+  import ContactButton from './ContactButton.svelte';
 
   /** Cards below this top offset (%) get the `hc-low` treatment. */
   const LOW_CARD_OFFSET = 60;
@@ -43,7 +42,7 @@
       pointerX += (targetX - pointerX) * POINTER_EASING;
       pointerY += (targetY - pointerY) * POINTER_EASING;
       parallaxLayers.forEach((layer, index) => {
-        const { depth, side } = heroCards[index];
+        const { depth, side } = heroShots[index];
         const direction = side === 'left' ? -1 : 1;
         const bob = reduceMotion ? 0 : Math.sin(time / BOB_PERIOD_MS + index * BOB_PHASE_STEP) * BOB_PX * depth;
         const x = -pointerX * depth * POINTER_SHIFT_PX + direction * scrollY * depth * SCROLL_SHIFT_X;
@@ -69,7 +68,7 @@
 
 <section class="hero" id="top" data-theme="light" bind:this={hero}>
   <div class="hero-cards">
-    {#each heroCards as card, index (card.name)}
+    {#each heroShots as card, index (card.title)}
       <div
         class="hc"
         class:hc-mid={card.isMidLayer}
@@ -79,14 +78,10 @@
       >
         <div class="hc-par" bind:this={parallaxLayers[index]}>
           <div class="hc-body">
-            {#if card.isVinyl}
-              <VinylArt />
-            {:else}
-              <img class="hc-img" src={img(card.seed!, card.width * 2, card.height * 2)} alt="" />
-            {/if}
+            <img class="hc-img" src={heroShotImage(card)} alt="" />
             <div class="hc-meta">
-              <span class="av"><img src={avatar(card.avatarId)} alt="" /><i></i></span>
-              <span><b>{card.name}</b><small>{card.role} · {card.city}</small></span>
+              <span class="av"><img src={logoImage(card.seed)} alt="" /><i></i></span>
+              <span><b>{card.title}</b><small>{card.caption}</small></span>
             </div>
           </div>
         </div>
@@ -102,7 +97,7 @@
     </h1>
     <p class="hero-sub">{t('hero.sub')}</p>
     <Countdown />
-    <button class="btn btn-dark btn-lg hero-cta" id="heroCta" onclick={openSignup}><span>{t('cta')}</span></button>
+    <ContactButton isLarge extraClass="hero-cta" id="heroCta" />
   </div>
   <a class="scroll-hint" href="#people">
     <span>{t('scroll')}</span>
