@@ -106,5 +106,14 @@ export interface Job {
   color: string;
 }
 
+/** A profile link in the social section; `icon` is a brand mark in a 24×24 viewBox. */
+export interface Social {
+  label: string;
+  handle: string;
+  url: string;
+  /** Opens in a new tab (web profiles); false for mailto. */
+  isExternal: boolean;
+  icon: TechIcon;
+}
 
 export type ProjectTab = 'gallery' | 'highlights' | 'details';

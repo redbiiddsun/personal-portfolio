@@ -1,7 +1,7 @@
 // Portfolio content. Projects, screenshots and stats are real (taken from each live site or the App Store).
 // Still PLACEHOLDER: the WDDW work-history summary (marked below). Replace before publishing.
-import { techIcons } from './tech-icons';
-import type { HeroShot, Job, Project, TechLogo, TechName } from './types';
+import { MAIL_ICON, techIcons } from './tech-icons';
+import type { HeroShot, Job, Project, Social, TechLogo, TechName } from './types';
 
 export const OWNER = {
   name: 'Phanasorn Srisayam',
@@ -216,4 +216,10 @@ export const skills = [
   'PostgreSQL', 'MySQL', 'Prisma', 'SQLAlchemy', 'TypeORM',
   'Docker', 'Linux', 'Git', 'GitHub Actions', 'GitLab CI/CD', 'Supabase', 'Cloudflare', 'AWS',
   'Llama', 'MLflow',
+];
+
+export const socials: Social[] = [
+  { label: 'GitHub', handle: '@redbiiddsun', url: 'https://github.com/redbiiddsun', isExternal: true, icon: techIcons.GitHub },
+  { label: 'LinkedIn', handle: 'in/phanasorn-srisayam', url: 'https://www.linkedin.com/in/phanasorn-srisayam', isExternal: true, icon: techIcons.LinkedIn },
+  { label: 'Email', handle: OWNER.email, url: MAILTO_HREF, isExternal: false, icon: MAIL_ICON },
 ];
