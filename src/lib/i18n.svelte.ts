@@ -31,7 +31,7 @@ const english = {
     "k2.p": "We agree on scope and milestones up front. You get a working demo every week, so you always know where things stand.",
     "feat.title": "One developer. The whole stack.",
     "f1.a": "Build",
-    "f1.b": "products clients love",
+    "f1.b": "with Stack of your choice",
     "f2.a": "Every feature,",
     "f2.b": "fast & findable",
     "f3.a": "Secure",

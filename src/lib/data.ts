@@ -208,3 +208,12 @@ export const experience: Job[] = [
     color: '#ffd1e3',
   },
 ];
+
+/** Every tool I've shipped with, from the CV; each shows as a logo card. */
+export const skills = [
+  'Python', 'TypeScript', 'Java', 'FastAPI', 'NestJS', 'Express.js', 'GraphQL', 'JWT', 'Redis',
+  'Next.js', 'React', 'Svelte', 'Tailwind CSS',
+  'PostgreSQL', 'MySQL', 'Prisma', 'SQLAlchemy', 'TypeORM',
+  'Docker', 'Linux', 'Git', 'GitHub Actions', 'GitLab CI/CD', 'Supabase', 'Cloudflare', 'AWS',
+  'Llama', 'MLflow',
+];

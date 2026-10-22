@@ -1,8 +1,9 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { inView, reveal } from '#lib/actions.ts';
-  import { OWNER, avatar, projects } from '#lib/data.ts';
+  import { avatar, projects, skills } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
+  import { techIconFor } from '#lib/tech-icons.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
   import Sweep from './Sweep.svelte';
 
@@ -12,18 +13,11 @@
   const HOLD_MS = 1600;
   const NEXT_QUERY_PAUSE_MS = 300;
   const HIGHLIGHTS_PER_PROJECT = 2;
-  const PROFILE_SHOT_COUNT = 2;
-  const PROFILE_AVATAR_PX = 120;
-  /** PLACEHOLDER: swap for your own photo. */
-  const PROFILE_PHOTO = avatar(36, PROFILE_AVATAR_PX);
-  const technologyCount = new Set(projects.flatMap((project) => project.stack)).size;
-  const profileShots = projects
-    .flatMap((project) => (project.banner.type === 'image' ? [project.banner.src] : []))
-    .slice(0, PROFILE_SHOT_COUNT);
   const FLAGS = ['🇰🇷', '🇺🇸', '🇹🇭', '🇯🇵', '🇪🇺', '🇬🇧'];
 
   // Marquees loop seamlessly by rendering their items twice.
-  const marqueeProjects = [...projects, ...projects];
+  const stackRowSplit = Math.ceil(skills.length / 2);
+  const stackRows = [skills.slice(0, stackRowSplit), skills.slice(stackRowSplit)].map((row) => [...row, ...row]);
   const discoveryResults = projects.flatMap((project) =>
     project.highlights.slice(0, HIGHLIGHTS_PER_PROJECT).map((highlight) => ({ ...highlight, projectName: project.name, isDemo: project.isDemo })),
   );
@@ -59,24 +53,21 @@
 <section class="features" id="features" data-theme="dark">
   <h2 class="h2" use:reveal>{t('feat.title')}</h2>
 
-  <!-- 1. Products + project marquee -->
+  <!-- 1. Stack marquee: two rows running in opposite directions -->
   <div class="f-row" use:inView>
     <div class="f-card grad-1">
-      <div class="mini-profile">
-        <div class="mp-head"><img src={PROFILE_PHOTO} alt="" /><div><b>{OWNER.nickname}</b><small>{OWNER.name} · {OWNER.title}</small></div></div>
-        <p>Web apps end to end, from database to pixel.</p>
-        <!-- PLACEHOLDER: set your real reply time and availability. -->
-        <small class="mp-loc">● Booking from Nov 2026</small>
-        <div class="mp-gap"></div>
-        <div class="mp-stats"><span><b>{projects.length}</b>Projects</span><span><b>{technologyCount}</b>Technologies</span><span><b>EN/TH</b>Languages</span><span><b>&lt;24h</b>Replies</span></div>
-        <div class="mp-shots">{#each profileShots as shotSrc (shotSrc)}<img src={shotSrc} alt="" />{/each}</div>
-      </div>
-      <div class="rev-marquee">
-        <div class="rev-track">
-          {#each marqueeProjects as project, index (index)}
-            <div class="rev-card"><div class="s">{project.label}</div><p>{project.summary}</p><div class="who"><img src={project.logo} alt="" />{project.name}{#if project.isDemo} · Demo{/if}</div></div>
-          {/each}
-        </div>
+      <div class="stack-marquee">
+        {#each stackRows as row, rowIndex (rowIndex)}
+          <div class="stack-track">
+            {#each row as tech, index (index)}
+              {@const icon = techIconFor(tech)}
+              <div class="stack-card" aria-hidden={index >= row.length / 2}>
+                {#if icon}<span class="stack-logo" style:--tile={icon.tile}><svg viewBox="0 0 24 24" fill={icon.color} aria-hidden="true"><path d={icon.path} /></svg></span>{/if}
+                {tech}
+              </div>
+            {/each}
+          </div>
+        {/each}
       </div>
     </div>
     <div class="f-text"><h3><Sweep text={t('f1.a')} /> <span class="dim">{t('f1.b')}</span></h3></div>
