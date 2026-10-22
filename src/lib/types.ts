@@ -1,3 +1,5 @@
+import type { techIcons } from './tech-icons';
+
 export type Lang = 'en' | 'th';
 
 export type DevArtKind = 'code' | 'terminal' | 'schema' | 'api';
@@ -21,18 +23,22 @@ interface HeroShotBase {
 
 /** `src`/`logo` are paths under /static (screenshots of the project, and its icon). */
 export type HeroImageShot = HeroShotBase & { src: string; logo: string };
-export type TechName = 'TypeScript' | 'NestJS' | 'Svelte' | 'PostgreSQL';
+/** Hero tech logos; `Extract` keeps the union tied to the `techIcons` keys. */
+export type TechName = Extract<keyof typeof techIcons, 'TypeScript' | 'NestJS' | 'Svelte' | 'PostgreSQL'>;
 /** `tech` names a `techStack` entry whose logo is shown as the card's icon. */
 export type HeroDevShot = HeroShotBase & { art: DevArtKind; tech: TechName };
 export type HeroShot = HeroImageShot | HeroDevShot;
 
-export interface TechLogo {
-  name: TechName;
+export interface TechIcon {
   /** Brand colour for the logo. */
   color: string;
   /** Single SVG path in a 24×24 viewBox. */
   path: string;
+  /** Tile background for light brand marks that lack contrast on the default white tile. */
+  tile?: string;
 }
+
+export type TechLogo = TechIcon & { name: TechName };
 
 export interface GalleryTile {
   src: string;
