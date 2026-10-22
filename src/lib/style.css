@@ -67,6 +67,24 @@ svg { display: block; }
 .intro { position: fixed; inset: 0; z-index: 100; background: #fff; display: grid; place-items: center; cursor: pointer; transition: opacity .5s; }
 .intro.gone { opacity: 0; pointer-events: none; }
 .intro-ring { position: relative; width: 0; height: 0; }
+.intro-greeting { --memoji-width: min(560px, 92vw); display: grid; justify-items: center; width: 100%; transition: opacity var(--memoji-fade) var(--ease), transform var(--memoji-fade) var(--ease); }
+.intro-greeting.out { opacity: 0; transform: scale(.92); }
+.intro-memoji { width: var(--memoji-width); height: auto; }
+/* Signature-style "hello": each letter's outline draws in turn, then the word fills in. */
+/* Tuck the text into the empty band below the Memoji's chin (about 12% of the clip's width). */
+.intro-hello { width: min(760px, 94vw); margin-top: calc(var(--memoji-width) * -.12); overflow: visible; }
+.intro-hello text { font: var(--hello-font); fill: transparent; stroke: var(--ink); stroke-width: var(--hello-stroke); stroke-linecap: round; stroke-linejoin: round; }
+.intro-hello tspan { stroke-dasharray: var(--outline); stroke-dashoffset: var(--outline); }
+.intro-hello.drawing tspan {
+  animation:
+    hello-draw var(--letter-draw) ease-in-out calc(var(--i) * var(--letter-stagger)) forwards,
+    /* `forwards` only: before its turn each letter must keep inheriting the text's fill (transparent while drawing). */
+    hello-sweep var(--sweep) var(--ease) calc(var(--sweep-delay) + var(--i) * var(--sweep-stagger)) forwards;
+}
+.intro-hello.drawing text { animation: hello-fill var(--fill) ease var(--fill-delay) forwards; }
+@keyframes hello-draw { to { stroke-dashoffset: 0; } }
+@keyframes hello-sweep { 0% { fill: var(--ink); stroke: var(--ink); } 30%, 55% { fill: var(--c); stroke: var(--c); } 100% { fill: var(--ink); stroke: var(--ink); } }
+@keyframes hello-fill { to { fill: var(--ink); } }
 .ri {
   position: absolute; left: 0; top: 0; width: 72px; height: 88px;
   transform: translate(-50%, -50%) rotate(var(--a)) translateY(calc(var(--R) * -1)) scale(0);
@@ -491,4 +509,5 @@ body.ready .hero-content > :nth-child(4) { transition-delay: .3s; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .intro { display: none; }
 }

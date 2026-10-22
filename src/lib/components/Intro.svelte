@@ -1,8 +1,9 @@
-<!-- Intro: a spinning ring of shots; each one then flies to its hero-card slot. -->
+<!-- Intro: a Memoji greeting fades out, then a spinning ring of shots flies into the hero-card slots. -->
 <script lang="ts">
   import { onMount } from 'svelte';
   import { heroShotImage, heroShots } from '#lib/data.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
+  import { SWEEP_COLORS } from './Sweep.svelte';
 
   let { cards }: { cards: HTMLElement[] } = $props();
 
@@ -10,8 +11,8 @@
   const MAX_RADIUS_PX = 240;
   const SPIN_DEG_PER_MS = 0.05;
   const STAGGER_MS = 55;
-  const MIN_SHOW_MS = 1500;
-  const MAX_SHOW_MS = 3500;
+  const MIN_SHOW_MS = 900;
+  const MAX_SHOW_MS = 2000;
   /** Size each card shrinks to while it sits in the ring. */
   const RING_ITEM_PX = 72;
   const FLY_STAGGER_MS = 35;
@@ -20,12 +21,48 @@
   const RADIUS_WIDTH_RATIO = 0.32;
   const RADIUS_HEIGHT_RATIO = 0.34;
   const FADE_OUT_MS = 600;
+  /** Memoji fade-out duration; drives the `.intro-greeting` fade via `--memoji-fade`. */
+  const MEMOJI_FADE_MS = 600;
+  /** Give up on the greeting if it hasn't finished by now (slow network, stalled decode). */
+  const MEMOJI_MAX_MS = 4500;
+  const HELLO_TEXT = 'hello, I’m Sun';
+  /** Single source for the signature font: used for font loading and, via `--hello-font`, by CSS. */
+  const HELLO_FONT = "110px 'Sacramento', cursive";
+  /**
+   * Outline length of each glyph in Sacramento at 110px (measured from the font file with fontTools).
+   * Each letter's dash equals its outline, so it is fully "written" exactly when its draw ends.
+   */
+  const HELLO_OUTLINE_LENGTHS: Record<string, number> = {
+    h: 427, e: 164, l: 333, o: 201, ',': 40, I: 462, '’': 40, m: 344, S: 557, u: 186, n: 241,
+  };
+  /** Each letter's outline draws over this long, starting this far after the previous letter. */
+  const HELLO_LETTER_DRAW_MS = 700;
+  const HELLO_LETTER_STAGGER_MS = 160;
+  const HELLO_FILL_MS = 500;
+  /**
+   * Pen width (viewBox units). Sacramento has a single thin weight; a pen this thick covers each letter's
+   * outline, so the text reads as bold from the first stroke, not only once it fills in.
+   */
+  const HELLO_STROKE = 5;
+  const HELLO_WRITTEN_MS =
+    (HELLO_TEXT.length - 1) * HELLO_LETTER_STAGGER_MS + HELLO_LETTER_DRAW_MS + HELLO_FILL_MS;
+  /** Once written, a colour ripple runs through the letters, like the `.sweep` words in Features. */
+  const HELLO_SWEEP_MS = 1600;
+  const HELLO_SWEEP_STAGGER_MS = 60;
+  const HELLO_DURATION_MS =
+    HELLO_WRITTEN_MS + (HELLO_TEXT.length - 1) * HELLO_SWEEP_STAGGER_MS + HELLO_SWEEP_MS;
+  /** Don't hold the intro hostage to a slow font download. */
+  const HELLO_FONT_MAX_WAIT_MS = 1500;
 
   let radius = $state(0);
   let angle = $state(0);
   let isGone = $state(false);
   let isRemoved = $state(false);
   let ring = $state<HTMLDivElement>();
+  let memoji = $state<HTMLVideoElement>();
+  let isMemojiShown = $state(true);
+  let isMemojiFading = $state(false);
+  let isHelloDrawing = $state(false);
   /** Replaced on mount; clicking the ring before then is a no-op. */
   let handoff = () => {};
 
@@ -57,6 +94,22 @@
     });
   };
 
+  /** Resolves when the greeting ends, or right away if it can't play (blocked autoplay, no codec). */
+  const playMemoji = () =>
+    new Promise<void>((resolve) => {
+      if (!memoji || memoji.ended) return resolve();
+      memoji.addEventListener('ended', () => resolve(), { once: true });
+      memoji.play().catch(() => resolve());
+      setTimeout(resolve, MEMOJI_MAX_MS);
+    });
+
+  /** Draws the hello once its script font is ready (or after a short wait); resolves when fully drawn. */
+  const drawHello = async () => {
+    await Promise.race([document.fonts.load(HELLO_FONT).catch(() => {}), wait(HELLO_FONT_MAX_WAIT_MS)]);
+    isHelloDrawing = true;
+    await wait(HELLO_DURATION_MS);
+  };
+
   onMount(() => {
     const body = document.body.classList;
     if (prefersReducedMotion() || scrollY > SKIP_IF_SCROLLED_PX) {
@@ -66,14 +119,10 @@
     }
     body.add('intro-on');
     radius = Math.min(innerWidth * RADIUS_WIDTH_RATIO, innerHeight * RADIUS_HEIGHT_RATIO, MAX_RADIUS_PX);
+    // Fetch the ring shots while the greeting plays, so the ring appears fully loaded.
+    heroShots.forEach((shot) => (new Image().src = heroShotImage(shot)));
 
-    let lastTime = performance.now();
-    let frame = requestAnimationFrame(function spin(time) {
-      angle += (time - lastTime) * SPIN_DEG_PER_MS;
-      lastTime = time;
-      frame = requestAnimationFrame(spin);
-    });
-
+    let frame = 0;
     let isHandedOff = false;
     handoff = () => {
       if (isHandedOff) return;
@@ -86,7 +135,23 @@
       setTimeout(() => (isRemoved = true), FADE_OUT_MS);
     };
 
+    const startSpin = () => {
+      let lastTime = performance.now();
+      frame = requestAnimationFrame(function spin(time) {
+        angle += (time - lastTime) * SPIN_DEG_PER_MS;
+        lastTime = time;
+        frame = requestAnimationFrame(spin);
+      });
+    };
+
     (async () => {
+      await Promise.all([playMemoji(), drawHello()]);
+      if (isHandedOff) return;
+      isMemojiFading = true;
+      await wait(MEMOJI_FADE_MS);
+      if (isHandedOff) return; // skipped by a click mid-fade
+      isMemojiShown = false;
+      startSpin();
       await wait(0); // let the ring images render before decoding them
       const images = [...(ring?.querySelectorAll('img') ?? [])];
       const loaded = Promise.all(images.map((image) => image.decode().catch(() => {})));
@@ -94,7 +159,10 @@
       handoff();
     })();
 
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      isHandedOff = true;
+      cancelAnimationFrame(frame);
+    };
   });
 </script>
 
@@ -109,14 +177,49 @@
     aria-hidden="true"
     onclick={() => handoff()}
   >
-    <div class="intro-ring" bind:this={ring} style:transform="rotate({angle}deg)">
-      {#if radius}
-        {#each heroShots as card, index (card.title)}
-          <div class="ri" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
-            <img src={heroShotImage(card)} alt="" />
-          </div>
-        {/each}
-      {/if}
-    </div>
+    {#if isMemojiShown}
+      <!-- Safari plays the HEVC-with-alpha original; other browsers skip it (unknown type) and use VP9 alpha. -->
+      <div class="intro-greeting" class:out={isMemojiFading} style:--memoji-fade="{MEMOJI_FADE_MS}ms">
+        <video
+          class="intro-memoji"
+          bind:this={memoji}
+          width="640"
+          height="480"
+          autoplay
+          muted
+          playsinline
+          preload="auto"
+        >
+          <source src="/intro/memoji.mov" type={'video/quicktime; codecs="hvc1"'} />
+          <source src="/intro/memoji.webm" type="video/webm" />
+        </video>
+        <svg
+          class="intro-hello"
+          class:drawing={isHelloDrawing}
+          viewBox="0 0 760 130"
+          style:--hello-font={HELLO_FONT}
+          style:--hello-stroke={HELLO_STROKE}
+          style:--letter-draw="{HELLO_LETTER_DRAW_MS}ms"
+          style:--letter-stagger="{HELLO_LETTER_STAGGER_MS}ms"
+          style:--fill="{HELLO_FILL_MS}ms"
+          style:--fill-delay="{HELLO_WRITTEN_MS - HELLO_FILL_MS}ms"
+          style:--sweep="{HELLO_SWEEP_MS}ms"
+          style:--sweep-delay="{HELLO_WRITTEN_MS}ms"
+          style:--sweep-stagger="{HELLO_SWEEP_STAGGER_MS}ms"
+        >
+          <text x="380" y="95" text-anchor="middle">{#each HELLO_TEXT as letter, index (index)}<tspan style:--i={index} style:--outline={HELLO_OUTLINE_LENGTHS[letter] ?? 0} style:--c={SWEEP_COLORS[index % SWEEP_COLORS.length]}>{letter}</tspan>{/each}</text>
+        </svg>
+      </div>
+    {:else}
+      <div class="intro-ring" bind:this={ring} style:transform="rotate({angle}deg)">
+        {#if radius}
+          {#each heroShots as card, index (card.title)}
+            <div class="ri" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
+              <img src={heroShotImage(card)} alt="" />
+            </div>
+          {/each}
+        {/if}
+      </div>
+    {/if}
   </div>
 {/if}
