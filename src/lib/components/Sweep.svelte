@@ -1,10 +1,13 @@
 <!-- Splits a keyword into graphemes so colour can ripple through it (see `.sweep` in style.css). -->
+<script lang="ts" module>
+  /** Shared with the intro signature so both colour ripples use the same palette. */
+  export const SWEEP_COLORS = ['#8ab4f8', '#4f86f7', '#a970ff', '#f04fb0', '#ff7a45', '#ffb84d'];
+</script>
+
 <script lang="ts">
   import { locale } from '#lib/i18n.svelte.ts';
 
   let { text }: { text: string } = $props();
-
-  const SWEEP_COLORS = ['#8ab4f8', '#4f86f7', '#a970ff', '#f04fb0', '#ff7a45', '#ffb84d'];
 
   const graphemes = $derived(
     typeof Intl.Segmenter === 'function'
