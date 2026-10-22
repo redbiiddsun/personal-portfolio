@@ -3,8 +3,8 @@
   import { heroShotImage, heroShots, logoImage } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
   import { prefersReducedMotion } from '#lib/utils.ts';
-  import Countdown from './Countdown.svelte';
   import RotatingWord from './RotatingWord.svelte';
+  import TechStack from './TechStack.svelte';
   import ContactButton from './ContactButton.svelte';
 
   /** Cards below this top offset (%) get the `hc-low` treatment. */
@@ -96,7 +96,7 @@
       <span>{t('hero.l2b')}</span>
     </h1>
     <p class="hero-sub">{t('hero.sub')}</p>
-    <Countdown />
+    <TechStack />
     <ContactButton isLarge extraClass="hero-cta" id="heroCta" />
   </div>
   <a class="scroll-hint" href="#people">

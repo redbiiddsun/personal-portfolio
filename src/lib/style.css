@@ -168,13 +168,10 @@ body.ready .hero-content > :nth-child(4) { transition-delay: .3s; }
 .word.out { opacity: 0; filter: blur(12px); transform: translateY(-35%) scale(1.05); }
 .hero-sub { color: var(--ink-2); font-size: clamp(15px, 1.3vw, 17px); margin: 0 0 30px; }
 
-.countdown { display: flex; gap: 10px; justify-content: center; margin-bottom: 40px; }
-.cd-box { width: clamp(70px, 8.6vw, 118px); padding: 18px 0 14px; background: var(--soft); border-radius: 16px; }
-.cd-num { position: relative; height: 1.2em; overflow: hidden; font-size: clamp(26px, 2.6vw, 38px); font-variant-numeric: tabular-nums; }
-.cd-num span { position: absolute; inset: 0; transition: transform .5s var(--ease), opacity .5s, filter .5s; }
-.cd-num span.enter { transform: translateY(70%); opacity: 0; filter: blur(4px); }
-.cd-num span.leave { transform: translateY(-70%); opacity: 0; filter: blur(4px); }
-.cd-label { font-size: 13px; color: var(--ink-2); margin-top: 6px; }
+.tech-stack { display: flex; gap: 10px; justify-content: center; list-style: none; padding: 0; margin: 0 0 40px; }
+.tech-box { width: clamp(70px, 8.6vw, 118px); padding: 18px 0 14px; background: var(--soft); border-radius: 16px; display: grid; justify-items: center; }
+.tech-logo { width: clamp(26px, 2.6vw, 38px); height: clamp(26px, 2.6vw, 38px); }
+.tech-label { font-size: 13px; color: var(--ink-2); margin-top: 8px; }
 
 .scroll-hint { position: absolute; bottom: 26px; left: 50%; transform: translateX(-50%); display: grid; justify-items: center; gap: 4px; color: var(--ink-3); font-size: 14px; text-decoration: none; z-index: 2; }
 .scroll-hint svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; animation: bob 1.6s ease-in-out infinite; }
@@ -497,7 +494,7 @@ body.ready .hero-content > :nth-child(4) { transition-delay: .3s; }
   .hc-low { top: auto !important; bottom: -40px; }
   .hc-meta { display: none; }
   .hero-content { padding: 150px 16px 150px; }
-  .countdown { gap: 6px; }
+  .tech-stack { gap: 6px; }
   .notes-board { height: auto; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .note { position: relative; left: auto !important; top: auto !important; width: auto; cursor: default; }
   .keep-title { margin-bottom: 60px; }
