@@ -4,14 +4,14 @@
   import { t } from '#lib/i18n.svelte.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
 
-  const CLIENT_MESSAGE = 'Hi! I found your profile on Explore 👋';
-  const REPLY_MESSAGE = 'Thanks! Let’s get started 🙌';
+  const CLIENT_MESSAGE = 'Hi! Can you build our app? 👋';
+  const REPLY_MESSAGE = 'Yes! Let’s scope it this week 🙌';
   const TYPE_DELAY_MS = 38;
   const REPLY_PAUSE_MS = 500;
   const PILL_STAGGER_MS = 350;
-  const FEE_PILLS = [
-    { tone: 'pill-amber', label: 'First order · small referral fee' },
-    { tone: 'pill-green', label: 'Every repeat order · 0%' },
+  const PROCESS_PILLS = [
+    { tone: 'pill-amber', label: 'Week 1 · scope & prototype' },
+    { tone: 'pill-green', label: 'Every week · live demo' },
   ];
   const SMALL_AVATAR_PX = 80;
   const clientAvatarIds = [13, 26, 38];
@@ -27,7 +27,7 @@
     }
   };
 
-  /* Chat bubbles type themselves when the referral row scrolls in. */
+  /* Chat bubbles type themselves when the process row scrolls in. */
   const playChat = async () => {
     chat.isClientOn = true;
     await typeInto('client', CLIENT_MESSAGE);
@@ -35,7 +35,7 @@
     await wait(REPLY_PAUSE_MS);
     chat.isReplyOn = true;
     await typeInto('reply', REPLY_MESSAGE);
-    for (let pill = 0; pill < FEE_PILLS.length; pill++) {
+    for (let pill = 0; pill < PROCESS_PILLS.length; pill++) {
       await wait(PILL_STAGGER_MS);
       chat.pillsShown++;
     }
@@ -54,15 +54,15 @@
       <div class="k-art art-own">
         <div class="own-client">
           <span class="stack">{#each clientAvatarIds as avatarId (avatarId)}<img src={avatar(avatarId, SMALL_AVATAR_PX)} alt="" />{/each}</span>
-          <span>Your client</span>
+          <span>You</span>
         </div>
         <svg class="own-arrow" viewBox="0 0 200 120" aria-hidden="true"><path class="draw" d="M32 6c-6 50 20 90 130 92" /><path class="draw head" d="m150 86 14 12-14 10" /></svg>
-        <div class="own-zero">0<small>%</small></div>
+        <div class="own-zero">1<small>:1</small></div>
       </div>
       <div class="k-text">
         <h3><span>{t('k1.a')}</span> <span class="shine">{t('k1.b')}</span></h3>
         <p>{t('k1.p')}</p>
-        <a class="k-link" href="#features"><span>{t('k1.link')}</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
+        <a class="k-link" href="#showcase"><span>{t('k1.link')}</span> <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></a>
       </div>
     </div>
 
@@ -74,7 +74,7 @@
         </div>
         <div class="chat-line me"><div class="bubble" class:on={chat.isReplyOn}><span class="typed">{chat.reply}</span></div></div>
         <div class="fee-pills">
-          {#each FEE_PILLS as pill, index (pill.label)}<span class="pill {pill.tone}" class:on={index < chat.pillsShown}>{pill.label}</span>{/each}
+          {#each PROCESS_PILLS as pill, index (pill.label)}<span class="pill {pill.tone}" class:on={index < chat.pillsShown}>{pill.label}</span>{/each}
         </div>
       </div>
       <div class="k-text">
