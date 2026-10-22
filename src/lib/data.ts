@@ -7,7 +7,7 @@ export const OWNER = {
   name: 'Phanasorn Srisayam',
   nickname: 'Sun',
   title: 'Full-stack developer',
-  email: 'sun@wedodevwork.com',
+  email: 'sunphanasorn@gmail.com',
 };
 
 export const MAILTO_HREF = `mailto:${OWNER.email}?subject=${encodeURIComponent('Project enquiry')}`;
