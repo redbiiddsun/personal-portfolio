@@ -1,140 +1,160 @@
-// Placeholder content. Every person, handle and number here is fictional —
-// swap in real freelancers / assets before shipping.
-import type { HeroCard, Review, Role, Service, StickyNote } from './types';
+// Portfolio content. Everything marked PLACEHOLDER is sample copy:
+// replace it with your real projects, numbers, screenshots and client quotes before publishing.
+import type { HeroShot, Highlight, Project, StickyNote, Testimonial } from './types';
+
+export const OWNER = {
+  name: 'Phanasorn Srisayam',
+  nickname: 'Sun',
+  title: 'Full-stack developer',
+  email: 'sun@wedodevwork.com',
+};
+
+export const MAILTO_HREF = `mailto:${OWNER.email}?subject=${encodeURIComponent('Project enquiry')}`;
 
 export const img = (seed: string, width: number, height: number) =>
   `https://picsum.photos/seed/${seed}/${width}/${height}`;
 export const avatar = (avatarId: number, size = 160) => `https://i.pravatar.cc/${size}?img=${avatarId}`;
-/** Portfolio tiles render at half the requested height, so fetch at 2x for sharpness. */
-export const portfolioImage = (seed: string, height: number) => img(seed, 400, height * 2);
-export const serviceImage = (service: Service) => img(service.seed, 300, 220);
+/** Gallery tiles render at half the requested height, so fetch at 2x for sharpness. */
+export const galleryImage = (seed: string, height: number) => img(seed, 400, height * 2);
+export const highlightImage = (highlight: Highlight) => img(highlight.seed, 300, 220);
 export const bannerImage = (seed: string) => img(seed, 900, 300);
+export const logoImage = (seed: string) => img(seed, 160, 160);
+/** Hero shots render at CSS size, so fetch at 2x for sharpness. */
+export const heroShotImage = (shot: HeroShot) => img(shot.seed, shot.width * 2, shot.height * 2);
 
-export const heroCards: HeroCard[] = [
-  { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, isVinyl: true, name: 'Niran Vatanakul', role: 'Sound Composer', city: 'Bangkok', avatarId: 12 },
-  { side: 'left', offsetX: 8, offsetY: -5, width: 150, height: 120, rotation: 3, depth: 0.3, seed: 'studio-desk', name: 'Leo Barker', role: 'AI Video Editor', city: 'Bangkok', avatarId: 15 },
-  { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, seed: 'ink-portrait', name: 'Kwan Ladda', role: 'Illustrator', city: 'Chiang Mai', avatarId: 47, isMidLayer: true },
-  { side: 'left', offsetX: -1.5, offsetY: 45, width: 200, height: 160, rotation: -3, depth: 0.5, seed: 'resort-site', name: 'Arnold Suriya', role: 'Web Designer', city: 'Bangkok', avatarId: 33, isMidLayer: true },
-  { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, seed: 'red-dress', name: 'Mali Chen', role: 'Fashion Photographer', city: 'Bangkok', avatarId: 44 },
-  { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, seed: 'packaging', name: 'Butter Cup', role: 'Packaging Designer', city: 'Bangkok', avatarId: 5 },
-  { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, seed: 'warm-interior', name: 'Peter Sato', role: 'Interior Designer', city: 'Osaka', avatarId: 53 },
-  { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, seed: 'wedding-light', name: 'Nguyen Van Nam', role: 'Wedding Photographer', city: 'Ho Chi Minh', avatarId: 59, isMidLayer: true },
-  { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, seed: 'city-tower', name: 'Sora Kim', role: '3D Artist', city: 'Seoul', avatarId: 25 },
-  { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, seed: 'silver-car', name: 'Mod Supacha', role: 'Graphic Designer', city: 'Bangkok', avatarId: 68 },
+// PLACEHOLDER screenshots: swap seeds for real project images.
+export const heroShots: HeroShot[] = [
+  { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, seed: 'dashboard-ui', title: 'Pulse Analytics', caption: 'SvelteKit · 2025' },
+  { side: 'left', offsetX: 8, offsetY: -5, width: 150, height: 120, rotation: 3, depth: 0.3, seed: 'studio-desk', title: 'Dev setup', caption: 'Bangkok' },
+  { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, seed: 'phone-landing', title: 'Queue', caption: 'React Native · 2025', isMidLayer: true },
+  { side: 'left', offsetX: -1.5, offsetY: 45, width: 200, height: 160, rotation: -3, depth: 0.5, seed: 'resort-site', title: 'Resort booking', caption: 'Next.js · 2024', isMidLayer: true },
+  { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, seed: 'shop-mock', title: 'Mercado shop', caption: 'E-commerce · 2024' },
+  { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, seed: 'server-green', title: 'Platform API', caption: 'Node.js · 2025' },
+  { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, seed: 'glass-ui', title: 'Helpdesk AI', caption: 'LLM · 2025' },
+  { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, seed: 'cafe-site', title: 'Café site', caption: 'Svelte · 2024', isMidLayer: true },
+  { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, seed: 'brand-cards', title: 'Design system', caption: 'Figma → code' },
+  { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, seed: 'poster-grid', title: 'This portfolio', caption: 'SvelteKit · 2026' },
 ];
 
-export const rotatingWords: string[] = ['you', 'คุณ', 'あなた', '你', '당신', 'vous', 'du'];
+export const rotatingWords: string[] = ['web apps', 'APIs', 'dashboards', 'mobile apps', 'AI tools'];
 
-export const roles: Role[] = [
+export const projects: Project[] = [
   {
-    id: 'sound-composer', role: 'Sound Composer',
-    name: 'Niran Vatanakul', handle: 'niran_sound', followers: '142K', avatarId: 12,
-    bio: 'Film composer with award-winning scores for features, series and documentaries across Thailand and Asia.',
-    stats: { earned: '฿5M+', orders: 104, rehires: 45, rating: 4.8 },
-    banner: { type: 'composer' },
-    tags: ['Film Scoring', 'Original Soundtrack', 'Sound Design'], city: 'Bangkok, Thailand',
-    portfolio: [{ seed: 'poster-smile', height: 260 }, { seed: 'forest-poster', height: 278 }, { seed: 'orchestra-bw', height: 124 }, { isVinyl: true }],
-    services: [
-      { title: 'Custom Short Film Score', price: '฿15,000', soldCount: 18, rating: 4.8, ratingCount: 14, seed: 'score-sheet' },
-      { title: 'Feature Film / Series Score', price: '฿500,000', soldCount: 12, rating: 5.0, ratingCount: 10, seed: 'forest-poster' },
-      { title: 'Original Soundtrack & Theme Song', price: '฿60,000', soldCount: 22, rating: 4.9, ratingCount: 17, seed: 'mixing-desk' },
+    id: 'portfolio', label: 'This portfolio',
+    name: 'Portfolio site', logoSeed: 'poster-grid', year: '2026',
+    summary: 'The site you’re on: a scroll-driven, bilingual landing page built as typed Svelte components.',
+    description: 'Started as a single imperative script and refactored into 18 typed Svelte 5 components with rune-based i18n, prerendered to static HTML.',
+    myRole: 'Design & engineering',
+    stats: [{ value: '18', label: 'Components' }, { value: '2', label: 'Languages' }, { value: '0', label: 'Runtime deps' }, { value: 'Static', label: 'Hosting' }],
+    banner: { type: 'type', text: 'SVELTE', emphasis: 'KIT' },
+    stack: ['SvelteKit', 'TypeScript', 'CSS animation'],
+    gallery: [{ seed: 'poster-grid', height: 250 }, { seed: 'phone-landing', height: 200 }, { seed: 'brand-cards', height: 140, badge: 'Live' }, { seed: 'glass-ui', height: 180 }],
+    highlights: [
+      { title: 'Scroll-driven showcase', detail: 'Pinned section steps through projects', seed: 'glass-ui' },
+      { title: 'English / Thai', detail: 'Reactive i18n with saved preference', seed: 'brand-cards' },
+      { title: 'Prerendered', detail: 'Static HTML, hydrated on load', seed: 'server-green' },
     ],
-    skills: ['Orchestration', 'Logic Pro', 'Live recording', 'Mixing'],
+  },
+  // PLACEHOLDER projects below: replace with real work.
+  {
+    id: 'pulse-analytics', label: 'SaaS dashboard',
+    name: 'Pulse Analytics', logoSeed: 'dashboard-ui', year: '2025',
+    summary: 'Real-time analytics dashboard for a B2B SaaS product.',
+    description: 'Multi-tenant dashboard with live charts, role-based access and CSV exports.',
+    myRole: 'Full-stack lead',
+    stats: [{ value: '12K', label: 'Users' }, { value: '40ms', label: 'p95 API' }, { value: '3', label: 'Months' }, { value: '99.9%', label: 'Uptime' }],
+    banner: { type: 'image', seed: 'dashboard-ui' },
+    stack: ['SvelteKit', 'PostgreSQL', 'WebSockets'],
+    gallery: [{ seed: 'dashboard-ui', height: 190 }, { seed: 'grade-before', height: 250, badge: 'Live' }, { seed: 'studio-desk', height: 140 }, { seed: 'glass-ui', height: 160 }, { seed: 'server-stack', height: 210 }],
+    highlights: [
+      { title: 'Live charts', detail: 'Streaming updates over WebSockets', seed: 'grade-before' },
+      { title: 'Team permissions', detail: 'Roles and audit log', seed: 'studio-desk' },
+      { title: 'Exports', detail: 'CSV and scheduled email reports', seed: 'server-stack' },
+    ],
   },
   {
-    id: 'photographer', role: 'Photographer',
-    name: 'Karn Phromma', handle: 'karn.shoots', followers: '48K', avatarId: 51,
-    bio: 'Creative / Social Media / Production House / Website / KOL / Event',
-    stats: { earned: '฿4.2M', orders: 96, rehires: 38, rating: 4.9 },
-    banner: { type: 'image', seed: 'moto-rider' },
-    tags: ['Photography', 'Production House', 'Social Media'], city: 'Bangkok, Thailand',
-    portfolio: [{ seed: 'beauty-pink', height: 245 }, { seed: 'red-texture', height: 160 }, { seed: 'night-ball', height: 105 }, { seed: 'chef-cut', height: 230 }, { seed: 'runway-blur', height: 245 }, { seed: 'bob-hair', height: 170 }],
-    services: [
-      { title: 'Commercial & Product Shoot', price: '฿35,000', soldCount: 24, rating: 4.9, ratingCount: 18, seed: 'bw-portrait' },
-      { title: 'Fashion & Lookbook', price: '฿45,000', soldCount: 9, rating: 5.0, ratingCount: 7, seed: 'beauty-pink' },
-      { title: 'Event & Social Media', price: '฿18,000 / day', soldCount: 31, rating: 4.8, ratingCount: 22, seed: 'night-ball' },
+    id: 'mercado-shop', label: 'E-commerce',
+    name: 'Mercado Shop', logoSeed: 'shop-mock', year: '2024',
+    summary: 'Storefront and back office for an independent retailer.',
+    description: 'Headless storefront with Stripe checkout, inventory sync and an admin for orders and refunds.',
+    myRole: 'Full-stack developer',
+    stats: [{ value: '+38%', label: 'Conversion' }, { value: '1.1s', label: 'LCP' }, { value: '2K', label: 'SKUs' }, { value: '24/7', label: 'Orders' }],
+    banner: { type: 'image', seed: 'shop-mock' },
+    stack: ['Next.js', 'Stripe', 'Prisma'],
+    gallery: [{ seed: 'shop-mock', height: 240 }, { seed: 'packaging', height: 150 }, { seed: 'cafe-site', height: 180, badge: 'Live' }, { seed: 'sticker-pack', height: 210 }],
+    highlights: [
+      { title: 'One-page checkout', detail: 'Stripe Payment Element', seed: 'packaging' },
+      { title: 'Inventory sync', detail: 'Nightly sync with the POS', seed: 'sticker-pack' },
+      { title: 'Admin', detail: 'Orders, refunds and discounts', seed: 'dashboard-ui' },
     ],
-    skills: ['Lighting', 'Retouching', 'Art direction', 'Capture One'],
   },
   {
-    id: 'video-editor', role: 'Video Editor',
-    name: 'Leo Barker', handle: 'leo.cuts', followers: '63K', avatarId: 15,
-    bio: 'AI-assisted video editor for brands, creators and short-form campaigns.',
-    stats: { earned: '฿2.8M', orders: 210, rehires: 77, rating: 4.9 },
-    banner: { type: 'image', seed: 'film-set' },
-    tags: ['Short-form', 'Color Grading', 'Motion'], city: 'Bangkok, Thailand',
-    portfolio: [{ seed: 'reel-neon', height: 300, price: '฿6,500' }, { seed: 'drone-coast', height: 120 }, { seed: 'studio-desk', height: 180 }, { seed: 'creator-cam', height: 260 }, { seed: 'grade-before', height: 140 }],
-    services: [
-      { title: 'Reels / TikTok Edit Pack (5 clips)', price: '฿6,500', soldCount: 88, rating: 4.9, ratingCount: 61, seed: 'reel-neon' },
-      { title: 'YouTube Long-form Edit', price: '฿12,000', soldCount: 40, rating: 4.8, ratingCount: 29, seed: 'creator-cam' },
-      { title: 'Brand Film, Cut & Grade', price: '฿80,000', soldCount: 7, rating: 5.0, ratingCount: 6, seed: 'film-set' },
+    id: 'queue-app', label: 'Mobile app',
+    name: 'Queue', logoSeed: 'phone-landing', year: '2025',
+    summary: 'Booking and queue app for clinics, on iOS and Android.',
+    description: 'Expo app with push reminders, offline-first booking and a web dashboard for staff.',
+    myRole: 'Mobile + backend',
+    stats: [{ value: '4.8★', label: 'Store rating' }, { value: '15', label: 'Clinics' }, { value: '-60%', label: 'Wait time' }, { value: '2', label: 'Platforms' }],
+    banner: { type: 'gradient', label: 'iOS · Android' },
+    stack: ['React Native', 'Expo', 'Supabase'],
+    gallery: [{ seed: 'phone-landing', height: 260 }, { seed: 'creator-cam', height: 150 }, { seed: 'warm-interior', height: 190 }, { seed: 'glass-ui', height: 140, badge: 'App Store' }],
+    highlights: [
+      { title: 'Offline-first', detail: 'Books even with no signal', seed: 'creator-cam' },
+      { title: 'Push reminders', detail: 'Fewer no-shows', seed: 'warm-interior' },
     ],
-    skills: ['Premiere Pro', 'DaVinci Resolve', 'After Effects', 'Runway'],
   },
   {
-    id: 'graphic-designer', role: 'Graphic Designer',
-    name: 'Mod Supacha', handle: 'modsupacha', followers: '21K', avatarId: 68,
-    bio: 'Brand identities, packaging and key visuals with a bold, playful edge.',
-    stats: { earned: '฿1.9M', orders: 154, rehires: 61, rating: 4.9 },
-    banner: { type: 'image', seed: 'silver-car' },
-    tags: ['Branding', 'Packaging', 'Key Visual'], city: 'Bangkok, Thailand',
-    portfolio: [{ seed: 'packaging', height: 190 }, { seed: 'poster-grid', height: 250, price: '฿12,000' }, { seed: 'brand-cards', height: 140 }, { seed: 'silver-car', height: 160 }, { seed: 'sticker-pack', height: 210 }],
-    services: [
-      { title: 'Logo & Brand Identity', price: '฿18,000', soldCount: 52, rating: 4.9, ratingCount: 40, seed: 'brand-cards' },
-      { title: 'Packaging Design', price: '฿25,000', soldCount: 19, rating: 4.9, ratingCount: 15, seed: 'packaging' },
-      { title: 'Social Media Design Pack', price: '฿12,000', soldCount: 63, rating: 4.8, ratingCount: 47, seed: 'poster-grid' },
+    id: 'helpdesk-ai', label: 'AI tool',
+    name: 'Helpdesk AI', logoSeed: 'server-stack', year: '2025',
+    summary: 'Support assistant that answers from a company’s own docs.',
+    description: 'Retrieval-augmented chatbot with source citations, human handoff and an admin to manage documents.',
+    myRole: 'Full-stack developer',
+    stats: [{ value: '70%', label: 'Auto-resolved' }, { value: '<2s', label: 'Answer time' }, { value: '5K', label: 'Docs indexed' }, { value: 'EN/TH', label: 'Languages' }],
+    banner: { type: 'gradient', label: 'AI assistant' },
+    stack: ['Python', 'Claude API', 'RAG'],
+    gallery: [
+      { caseStudy: { seed: 'server-stack', title: 'Answering from your own docs', excerpt: 'How retrieval and citations keep answers grounded in what the company actually wrote.', readMinutes: 4 } },
+      { seed: 'server-green', height: 130 }, { seed: 'glass-ui', height: 185, badge: 'Beta' }, { seed: 'conference-badge', height: 230 },
     ],
-    skills: ['Illustrator', 'Figma', 'Typography', 'Print production'],
+    highlights: [
+      { title: 'Cited answers', detail: 'Every reply links its source', seed: 'server-green' },
+      { title: 'Human handoff', detail: 'Escalates to the support inbox', seed: 'glass-ui' },
+    ],
   },
   {
-    id: 'ai-automation', role: 'AI Automation',
-    name: 'Pakorn Siri', handle: 'pakorn.ai', followers: '1.2K', avatarId: 60,
-    bio: 'AI agents that get work done.',
-    stats: { earned: '฿2.5M', orders: 100, rehires: 10, rating: 4.9 },
-    banner: { type: 'ai' },
-    tags: ['AI Agents', 'Automation', 'LLM'], city: 'Bangkok, Thailand',
-    portfolio: [
-      { article: { seed: 'server-stack', title: 'Efficient local LLM on one GPU box', excerpt: 'Upload a document, ask in plain language, get answers that never leave your office.', readMinutes: 4 } },
-      { seed: 'server-green', height: 130 }, { seed: 'glass-ui', height: 185, price: '฿35,000' }, { seed: 'conference-badge', height: 230 },
+    id: 'platform-api', label: 'API & backend',
+    name: 'Platform API', logoSeed: 'server-green', year: '2024',
+    summary: 'Public REST API and webhooks for a logistics platform.',
+    description: 'Versioned REST API with OAuth, rate limiting, webhooks and generated docs.',
+    myRole: 'Backend lead',
+    stats: [{ value: '30M', label: 'Requests/mo' }, { value: '99.95%', label: 'Uptime' }, { value: '120', label: 'Endpoints' }, { value: '18', label: 'Integrations' }],
+    banner: { type: 'type', text: 'REST', emphasis: 'API' },
+    stack: ['Node.js', 'PostgreSQL', 'Docker'],
+    gallery: [{ seed: 'server-green', height: 170 }, { seed: 'drone-coast', height: 240 }, { seed: 'silver-car', height: 140, badge: 'v2' }, { seed: 'city-tower', height: 200 }],
+    highlights: [
+      { title: 'OAuth & API keys', detail: 'Scoped access per partner', seed: 'silver-car' },
+      { title: 'Webhooks', detail: 'Signed, retried, replayable', seed: 'drone-coast' },
+      { title: 'Generated docs', detail: 'OpenAPI spec and examples', seed: 'city-tower' },
     ],
-    services: [
-      { title: 'AI Automation Setup', price: '฿10,000', soldCount: 45, rating: 4.8, ratingCount: 12, seed: 'server-green' },
-      { title: 'Custom AI Chatbot', price: '฿35,000', soldCount: 20, rating: 4.9, ratingCount: 8, seed: 'glass-ui' },
-    ],
-    skills: ['Python', 'n8n', 'RAG', 'Agent workflows'],
-  },
-  {
-    id: 'web-developer', role: 'Web Developer',
-    name: 'Pixel & Co.', handle: 'pixelandco', followers: '8.4K', avatarId: 8,
-    bio: 'One-page sites, sales pages and e-commerce builds that convert.',
-    stats: { earned: '฿3.1M', orders: 188, rehires: 64, rating: 4.9 },
-    banner: { type: 'image', seed: 'resort-site' },
-    tags: ['Web Design', 'E-commerce', 'Landing Page'], city: 'Bangkok, Thailand',
-    portfolio: [{ seed: 'resort-site', height: 150 }, { seed: 'shop-mock', height: 240, price: '฿45,000' }, { seed: 'dashboard-ui', height: 170 }, { seed: 'phone-landing', height: 260 }, { seed: 'cafe-site', height: 130 }],
-    services: [
-      { title: 'One-Page Website, Sales Page', price: '฿15,000', soldCount: 71, rating: 4.9, ratingCount: 58, seed: 'phone-landing' },
-      { title: 'E-Commerce & Corporate Websites', price: '฿45,000', soldCount: 26, rating: 4.9, ratingCount: 21, seed: 'shop-mock' },
-      { title: 'Website Care Plan', price: '฿3,500 / mo', soldCount: 34, rating: 5.0, ratingCount: 19, seed: 'dashboard-ui' },
-    ],
-    skills: ['Next.js', 'Webflow', 'Shopify', 'SEO'],
   },
 ];
 
-export const reviewsPool: Review[] = [
-  { name: 'Hannah Kim', avatarId: 32, text: 'The profile sold me. Delivery matched every review.', postedAgo: '2 weeks ago' },
-  { name: 'Elena Rossi', avatarId: 45, text: 'Fast replies, strong craft, and proof I could verify.', postedAgo: '1 month ago' },
-  { name: 'Maya Chen', avatarId: 49, text: 'Clear brief, polished delivery — I’d hire them again.', postedAgo: '1 month ago' },
-  { name: 'Linh Tran', avatarId: 41, text: 'Honest reviews plus real samples — no guessing.', postedAgo: '2 months ago' },
-  { name: 'Tom Walker', avatarId: 14, text: 'Handled three rounds of feedback without a single missed date.', postedAgo: '3 months ago' },
+// PLACEHOLDER testimonials: replace with real client quotes (with their permission).
+export const testimonials: Testimonial[] = [
+  { name: 'Hannah Kim', avatarId: 32, text: 'Shipped exactly what we scoped, on time, and explained every trade-off.', title: 'Product lead' },
+  { name: 'Elena Rossi', avatarId: 45, text: 'Fast replies, clean code, and a weekly demo we could actually click.', title: 'Founder' },
+  { name: 'Maya Chen', avatarId: 49, text: 'Took our messy MVP to something we could sell. Would hire again.', title: 'CEO' },
+  { name: 'Linh Tran', avatarId: 41, text: 'Frontend and backend from one person — no handoff gaps.', title: 'CTO' },
+  { name: 'Tom Walker', avatarId: 14, text: 'Our API went from flaky to boring. Boring is great.', title: 'Engineering manager' },
 ];
 
 export const notes: StickyNote[] = [
-  { color: '#b5efc4', leftPercent: 22, topPx: 30, rotation: -3, text: { en: 'I use 3 different messengers to talk with different clients.', th: 'คุยกับลูกค้าแต่ละคน ต้องใช้แชตตั้ง 3 แอป' } },
-  { color: '#d4c2fb', leftPercent: 39, topPx: 50, rotation: 4, text: { en: 'The client still hasn’t paid...', th: 'ลูกค้ายังไม่โอนเลย...' } },
-  { color: '#ffb3a7', leftPercent: 56, topPx: 0, rotation: -2, text: { en: 'Where should I keep my paperwork?', th: 'เอกสารงานเก็บไว้ที่ไหนดี?' } },
-  { color: '#ffd1e3', leftPercent: 78, topPx: 20, rotation: 6, text: { en: 'Chasing invoices. Again.', th: 'ตามใบแจ้งหนี้อีกแล้ว' } },
-  { color: '#d4c2fb', leftPercent: 0, topPx: 240, rotation: -4, text: { en: 'How do clients pay me?', th: 'ลูกค้าจะจ่ายเงินเรายังไง?' } },
-  { color: '#fde09a', leftPercent: 29, topPx: 235, rotation: 2, text: { en: 'I don’t have any reviews to build credibility...', th: 'ยังไม่มีรีวิวให้ลูกค้าเชื่อใจเลย...' } },
-  { color: '#b4f0ec', leftPercent: 47, topPx: 215, rotation: -3, text: { en: 'How do I build a portfolio website?', th: 'ทำเว็บพอร์ตโฟลิโอยังไง?' } },
-  { color: '#e5e5e5', leftPercent: 80, topPx: 245, rotation: -6, text: { en: 'Another quotation to make...', th: 'ต้องทำใบเสนอราคาอีกแล้ว...' } },
+  { color: '#b5efc4', leftPercent: 22, topPx: 30, rotation: -3, text: { en: 'Our MVP has been “almost done” for six months.', th: 'MVP “ใกล้เสร็จแล้ว” มาหกเดือน' } },
+  { color: '#d4c2fb', leftPercent: 39, topPx: 50, rotation: 4, text: { en: 'The site is so slow on mobile...', th: 'เว็บช้ามากบนมือถือ...' } },
+  { color: '#ffb3a7', leftPercent: 56, topPx: 0, rotation: -2, text: { en: 'Nobody knows how the backend works anymore.', th: 'ไม่มีใครรู้แล้วว่าหลังบ้านทำงานยังไง' } },
+  { color: '#ffd1e3', leftPercent: 78, topPx: 20, rotation: 6, text: { en: 'Deploys break. Every. Friday.', th: 'ดีพลอยพัง ทุกวันศุกร์' } },
+  { color: '#d4c2fb', leftPercent: 0, topPx: 240, rotation: -4, text: { en: 'We need an API by next sprint.', th: 'ต้องมี API ภายในสปรินต์หน้า' } },
+  { color: '#fde09a', leftPercent: 29, topPx: 235, rotation: 2, text: { en: 'It looks nothing like the Figma...', th: 'ออกมาไม่เหมือนใน Figma เลย...' } },
+  { color: '#b4f0ec', leftPercent: 47, topPx: 215, rotation: -3, text: { en: 'Can we add AI to this?', th: 'ใส่ AI เข้าไปได้ไหม?' } },
+  { color: '#e5e5e5', leftPercent: 80, topPx: 245, rotation: -6, text: { en: 'Checkout keeps failing...', th: 'หน้าชำระเงินพังอีกแล้ว...' } },
 ];

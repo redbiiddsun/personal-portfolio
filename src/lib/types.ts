@@ -1,6 +1,7 @@
 export type Lang = 'en' | 'th';
 
-export interface HeroCard {
+/** A screenshot in the hero collage. */
+export interface HeroShot {
   side: 'left' | 'right';
   /** Horizontal offset from `side`, in % of the hero width. */
   offsetX: number;
@@ -11,66 +12,67 @@ export interface HeroCard {
   rotation: number;
   /** Parallax strength, 0–1. */
   depth: number;
-  seed?: string;
-  isVinyl?: boolean;
+  seed: string;
   isMidLayer?: boolean;
-  name: string;
-  role: string;
-  city: string;
-  avatarId: number;
+  title: string;
+  caption: string;
 }
 
-export interface Article {
+export interface CaseStudy {
   seed: string;
   title: string;
   excerpt: string;
   readMinutes: number;
 }
 
-export interface PortfolioTile {
+export interface GalleryTile {
   seed?: string;
   height?: number;
-  price?: string;
-  isVinyl?: boolean;
-  article?: Article;
+  /** Small badge on the tile, e.g. "Live". */
+  badge?: string;
+  caseStudy?: CaseStudy;
 }
 
-export interface Service {
+export interface Highlight {
   title: string;
-  price: string;
-  soldCount: number;
-  rating: number;
-  ratingCount: number;
+  detail: string;
   seed: string;
 }
 
-export type Banner =
-  | { type: 'composer' }
-  | { type: 'ai' }
-  | { type: 'image'; seed: string };
-
-export interface Role {
-  id: string;
-  role: string;
-  name: string;
-  handle: string;
-  followers: string;
-  avatarId: number;
-  bio: string;
-  stats: { earned: string; orders: number; rehires: number; rating: number };
-  banner: Banner;
-  tags: string[];
-  city: string;
-  portfolio: PortfolioTile[];
-  services: Service[];
-  skills: string[];
+export interface ProjectStat {
+  value: string;
+  label: string;
 }
 
-export interface Review {
+export type Banner =
+  /** Repeated typographic banner: `text` then bold `emphasis`. */
+  | { type: 'type'; text: string; emphasis: string }
+  | { type: 'gradient'; label: string }
+  | { type: 'image'; seed: string };
+
+export interface Project {
+  id: string;
+  /** Short label for the showcase list. */
+  label: string;
+  name: string;
+  logoSeed: string;
+  url?: string;
+  year: string;
+  summary: string;
+  description: string;
+  myRole: string;
+  stats: ProjectStat[];
+  banner: Banner;
+  stack: string[];
+  gallery: GalleryTile[];
+  highlights: Highlight[];
+}
+
+export interface Testimonial {
   name: string;
   avatarId: number;
   text: string;
-  postedAgo: string;
+  title: string;
 }
 
 export interface StickyNote {
@@ -81,4 +83,4 @@ export interface StickyNote {
   text: Record<Lang, string>;
 }
 
-export type ProfileTab = 'portfolio' | 'services' | 'reviews' | 'about';
+export type ProjectTab = 'gallery' | 'highlights' | 'feedback' | 'details';
