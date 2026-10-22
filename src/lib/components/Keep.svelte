@@ -1,45 +1,22 @@
 <script lang="ts">
   import { reveal } from '#lib/actions.ts';
-  import { avatar } from '#lib/data.ts';
+  import { projects } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
-  import { prefersReducedMotion, wait } from '#lib/utils.ts';
+  import { techIconFor, type techIcons } from '#lib/tech-icons.ts';
 
-  const CLIENT_MESSAGE = 'Hi! Can you build our app? 👋';
-  const REPLY_MESSAGE = 'Yes! Let’s scope it this week 🙌';
-  const TYPE_DELAY_MS = 38;
-  const REPLY_PAUSE_MS = 500;
-  const PILL_STAGGER_MS = 350;
-  const PROCESS_PILLS = [
-    { tone: 'pill-amber', label: 'Week 1 · scope & prototype' },
-    { tone: 'pill-green', label: 'Every week · live demo' },
+  type TechKey = keyof typeof techIcons;
+
+  const STACK_LAYERS: { label: string; techs: TechKey[] }[] = [
+    { label: 'UI', techs: ['Next.js', 'Svelte'] },
+    { label: 'API', techs: ['FastAPI', 'NestJS'] },
+    { label: 'Data', techs: ['PostgreSQL', 'Redis'] },
+    { label: 'Ship', techs: ['Docker', 'AWS'] },
   ];
-  const SMALL_AVATAR_PX = 80;
-  const clientAvatarIds = [13, 26, 38];
-  const chatAvatarId = 29;
-
-  const chat = $state({ client: '', reply: '', isClientOn: false, isReplyOn: false, isCaretShown: true, pillsShown: 0 });
-
-  const typeInto = async (field: 'client' | 'reply', text: string) => {
-    const delay = prefersReducedMotion() ? 0 : TYPE_DELAY_MS;
-    for (const character of Array.from(text)) {
-      chat[field] += character;
-      await wait(delay);
-    }
-  };
-
-  /* Chat bubbles type themselves when the process row scrolls in. */
-  const playChat = async () => {
-    chat.isClientOn = true;
-    await typeInto('client', CLIENT_MESSAGE);
-    chat.isCaretShown = false;
-    await wait(REPLY_PAUSE_MS);
-    chat.isReplyOn = true;
-    await typeInto('reply', REPLY_MESSAGE);
-    for (let pill = 0; pill < PROCESS_PILLS.length; pill++) {
-      await wait(PILL_STAGGER_MS);
-      chat.pillsShown++;
-    }
-  };
+  const INCIDENT_STEPS = ['Alert', 'Trace', 'Fix', 'Deploy'];
+  const SETUP_SERVICES = ['postgres', 'redis', 'api'];
+  // `my-isuzu` is a static entry in `projects`, so the lookup always succeeds.
+  const PRODUCTION_PROJECT = projects.find((project) => project.id === 'my-isuzu')!;
+  const PRODUCTION_CAPTION = [PRODUCTION_PROJECT.label, ...PRODUCTION_PROJECT.stack.slice(0, 2)].join(' · ');
 </script>
 
 <div class="panel panel-light">
@@ -50,14 +27,18 @@
         <svg class="scribble" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9c22-4 52-6 114-3" /></svg></span>
     </h2>
 
+    <!-- 1. Whole stack: one person owns every layer -->
     <div class="k-row" use:reveal>
-      <div class="k-art art-own">
-        <div class="own-client">
-          <span class="stack">{#each clientAvatarIds as avatarId (avatarId)}<img src={avatar(avatarId, SMALL_AVATAR_PX)} alt="" />{/each}</span>
-          <span>You</span>
-        </div>
-        <svg class="own-arrow" viewBox="0 0 200 120" aria-hidden="true"><path class="draw" d="M32 6c-6 50 20 90 130 92" /><path class="draw head" d="m150 86 14 12-14 10" /></svg>
-        <div class="own-zero">1<small>:1</small></div>
+      <div class="k-art art-stack" aria-hidden="true">
+        {#each STACK_LAYERS as layer, index (layer.label)}
+          <div class="layer" style:--i={index}>
+            <span class="layer-label">{layer.label}</span>
+            {#each layer.techs as tech (tech)}
+              {@const icon = techIconFor(tech)}
+              <span class="layer-tech">{#if icon}<svg viewBox="0 0 24 24" fill={icon.color}><path d={icon.path} /></svg>{/if}{tech}</span>
+            {/each}
+          </div>
+        {/each}
       </div>
       <div class="k-text">
         <h3><span>{t('k1.a')}</span> <span class="shine">{t('k1.b')}</span></h3>
@@ -66,20 +47,36 @@
       </div>
     </div>
 
-    <div class="k-row" use:reveal={playChat}>
-      <div class="k-art art-ref">
-        <div class="chat-line them">
-          <img src={avatar(chatAvatarId, SMALL_AVATAR_PX)} alt="" />
-          <div class="bubble" class:on={chat.isClientOn}><span class="typed">{chat.client}</span>{#if chat.isCaretShown}<i class="caret"></i>{/if}</div>
+    <!-- 2. Production: kept a live app running -->
+    <div class="k-row" use:reveal>
+      <div class="k-art art-prod" aria-hidden="true">
+        <div class="prod-app">
+          <img src={PRODUCTION_PROJECT.logo} alt="" />
+          <div><b>{PRODUCTION_PROJECT.name}</b><small>{PRODUCTION_CAPTION}</small></div>
+          <span class="live-dot">Live</span>
         </div>
-        <div class="chat-line me"><div class="bubble" class:on={chat.isReplyOn}><span class="typed">{chat.reply}</span></div></div>
-        <div class="fee-pills">
-          {#each PROCESS_PILLS as pill, index (pill.label)}<span class="pill {pill.tone}" class:on={index < chat.pillsShown}>{pill.label}</span>{/each}
+        <div class="prod-steps">
+          {#each INCIDENT_STEPS as step, index (step)}<span class="prod-step" style:--i={index}>{step}</span>{/each}
         </div>
       </div>
       <div class="k-text">
         <h3><span>{t('k2.a')}</span><br /><span class="shine">{t('k2.b')}</span></h3>
         <p>{t('k2.p')}</p>
+      </div>
+    </div>
+
+    <!-- 3. Developer experience: setup in minutes -->
+    <div class="k-row" use:reveal>
+      <div class="k-art art-term" aria-hidden="true">
+        <div class="term">
+          <div class="term-line"><span class="prompt">$</span> docker compose up</div>
+          {#each SETUP_SERVICES as service, index (service)}<div class="term-line ok" style:--i={index}>✓ {service} ready</div>{/each}
+        </div>
+        <div class="term-stat">{t('k3.from')} <span>→</span> {t('k3.to')}</div>
+      </div>
+      <div class="k-text">
+        <h3><span>{t('k3.a')}</span><br /><span class="shine">{t('k3.b')}</span></h3>
+        <p>{t('k3.p')}</p>
       </div>
     </div>
   </section>
