@@ -19,13 +19,12 @@ interface HeroShotBase {
   caption: string;
 }
 
-export type HeroImageShot = HeroShotBase & { seed: string };
+/** `src`/`logo` are paths under /static (screenshots of the project, and its icon). */
+export type HeroImageShot = HeroShotBase & { src: string; logo: string };
+export type TechName = 'TypeScript' | 'NestJS' | 'Svelte' | 'PostgreSQL';
 /** `tech` names a `techStack` entry whose logo is shown as the card's icon. */
 export type HeroDevShot = HeroShotBase & { art: DevArtKind; tech: TechName };
 export type HeroShot = HeroImageShot | HeroDevShot;
-
-
-export type TechName = 'TypeScript' | 'NestJS' | 'Svelte' | 'PostgreSQL';
 
 export interface TechLogo {
   name: TechName;
@@ -35,25 +34,18 @@ export interface TechLogo {
   path: string;
 }
 
-export interface CaseStudy {
-  seed: string;
-  title: string;
-  excerpt: string;
-  readMinutes: number;
-}
-
 export interface GalleryTile {
-  seed?: string;
-  height?: number;
+  src: string;
+  /** Rendered tile height in px (masonry). */
+  height: number;
   /** Small badge on the tile, e.g. "Live". */
   badge?: string;
-  caseStudy?: CaseStudy;
 }
 
 export interface Highlight {
   title: string;
   detail: string;
-  seed: string;
+  src: string;
 }
 
 export interface ProjectStat {
@@ -65,16 +57,18 @@ export type Banner =
   /** Repeated typographic banner: `text` then bold `emphasis`. */
   | { type: 'type'; text: string; emphasis: string }
   | { type: 'gradient'; label: string }
-  | { type: 'image'; seed: string };
+  | { type: 'image'; src: string };
 
 export interface Project {
   id: string;
   /** Short label for the showcase list. */
   label: string;
   name: string;
-  logoSeed: string;
+  logo: string;
   url?: string;
-  year: string;
+  /** Concept or mockup work, not a shipped client product. */
+  isDemo?: boolean;
+  year?: string;
   summary: string;
   description: string;
   myRole: string;
@@ -85,13 +79,6 @@ export interface Project {
   highlights: Highlight[];
 }
 
-export interface Testimonial {
-  name: string;
-  avatarId: number;
-  text: string;
-  title: string;
-}
-
 export interface StickyNote {
   color: string;
   leftPercent: number;
@@ -100,4 +87,4 @@ export interface StickyNote {
   text: Record<Lang, string>;
 }
 
-export type ProjectTab = 'gallery' | 'highlights' | 'feedback' | 'details';
+export type ProjectTab = 'gallery' | 'highlights' | 'details';

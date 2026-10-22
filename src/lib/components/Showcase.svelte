@@ -2,7 +2,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
-  import { bannerImage, galleryImage, highlightImage, logoImage, projects } from '#lib/data.ts';
+  import { projects } from '#lib/data.ts';
   import type { ProjectTab } from '#lib/types.ts';
   import { onScrollFrame, prefersReducedMotion } from '#lib/utils.ts';
   import ProjectCard from './ProjectCard.svelte';
@@ -62,10 +62,10 @@
   // Warm the cache for the other projects so swaps don't flash empty tiles.
   const warmImages = () => {
     const urls = projects.flatMap((project) => [
-      ...project.gallery.flatMap((tile) => (tile.seed && tile.height ? [galleryImage(tile.seed, tile.height)] : [])),
-      ...project.highlights.map(highlightImage),
-      ...(project.banner.type === 'image' ? [bannerImage(project.banner.seed)] : []),
-      logoImage(project.logoSeed),
+      ...project.gallery.map((tile) => tile.src),
+      ...project.highlights.map((highlight) => highlight.src),
+      ...(project.banner.type === 'image' ? [project.banner.src] : []),
+      project.logo,
     ]);
     const whenIdle = window.requestIdleCallback ?? ((callback: () => void) => setTimeout(callback, WARM_IMAGES_DELAY_MS));
     whenIdle(() => urls.forEach((url) => (new Image().src = url)));
@@ -112,7 +112,7 @@
     </div>
     <article class="sc-card">
       <div class="sc-inner" class:swap={isSwapping}>
-        <ProjectCard project={projects[shownIndex]} projectIndex={shownIndex} bind:tab />
+        <ProjectCard project={projects[shownIndex]} bind:tab />
       </div>
     </article>
   </div>

@@ -1,7 +1,7 @@
 <!-- Intro: a Memoji greeting fades out, then a spinning ring of shots flies into the hero-card slots. -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { heroShotImage, heroShots } from '#lib/data.ts';
+  import { heroShots } from '#lib/data.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
   import DevArt from './DevArt.svelte';
   import { SWEEP_COLORS } from './Sweep.svelte';
@@ -122,7 +122,7 @@
     radius = Math.min(innerWidth * RADIUS_WIDTH_RATIO, innerHeight * RADIUS_HEIGHT_RATIO, MAX_RADIUS_PX);
     // Fetch the ring shots while the greeting plays, so the ring appears fully loaded.
     heroShots.forEach((shot) => {
-      if ('seed' in shot) new Image().src = heroShotImage(shot);
+      if ('src' in shot) new Image().src = shot.src;
     });
 
     let frame = 0;
@@ -218,8 +218,8 @@
         {#if radius}
           {#each heroShots as card, index (card.title)}
             <div class="ri" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
-              {#if 'seed' in card}
-                <img src={heroShotImage(card)} alt="" />
+              {#if 'src' in card}
+                <img src={card.src} alt="" />
               {:else}
                 <DevArt kind={card.art} />
               {/if}

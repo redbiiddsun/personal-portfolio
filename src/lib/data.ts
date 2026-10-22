@@ -1,6 +1,6 @@
-// Portfolio content. Everything marked PLACEHOLDER is sample copy:
-// replace it with your real projects, numbers, screenshots and client quotes before publishing.
-import type { HeroImageShot, HeroShot, Highlight, Project, StickyNote, TechLogo, Testimonial } from './types';
+// Portfolio content. Projects, screenshots and stats are real (taken from each live site or the App Store).
+// Still PLACEHOLDER: roles, years and stacks marked below. Replace before publishing.
+import type { HeroShot, Project, StickyNote, TechLogo } from './types';
 
 export const OWNER = {
   name: 'Phanasorn Srisayam',
@@ -11,29 +11,22 @@ export const OWNER = {
 
 export const MAILTO_HREF = `mailto:${OWNER.email}?subject=${encodeURIComponent('Project enquiry')}`;
 
-export const img = (seed: string, width: number, height: number) =>
-  `https://picsum.photos/seed/${seed}/${width}/${height}`;
 export const avatar = (avatarId: number, size = 160) => `https://i.pravatar.cc/${size}?img=${avatarId}`;
-/** Gallery tiles render at half the requested height, so fetch at 2x for sharpness. */
-export const galleryImage = (seed: string, height: number) => img(seed, 400, height * 2);
-export const highlightImage = (highlight: Highlight) => img(highlight.seed, 300, 220);
-export const bannerImage = (seed: string) => img(seed, 900, 300);
-export const logoImage = (seed: string) => img(seed, 160, 160);
-/** Hero shots render at CSS size, so fetch at 2x for sharpness. */
-export const heroShotImage = (shot: HeroImageShot) => img(shot.seed, shot.width * 2, shot.height * 2);
 
-// PLACEHOLDER screenshots: swap seeds for real project images. The `art` cards are drawn in HTML (DevArt.svelte).
+const shot = (projectId: string, file: string) => `/projects/${projectId}/${file}`;
+
+// Image cards are screenshots of the projects below; `art` cards are drawn in HTML (DevArt.svelte).
 export const heroShots: HeroShot[] = [
-  { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, seed: 'dashboard-ui', title: 'Pulse Analytics', caption: 'SvelteKit · 2025' },
+  { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, src: shot('engineeringscore', 'home.webp'), logo: shot('engineeringscore', 'logo.png'), title: 'EngineeringScore', caption: 'SvelteKit · SaaS' },
   { side: 'left', offsetX: 8, offsetY: -5, width: 150, height: 120, rotation: 3, depth: 0.3, art: 'terminal', tech: 'Svelte', title: 'build.log', caption: 'Svelte · build' },
-  { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, seed: 'phone-landing', title: 'Queue', caption: 'React Native · 2025', isMidLayer: true },
+  { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, src: shot('my-isuzu', 'screen-3.webp'), logo: shot('my-isuzu', 'logo.png'), title: 'my-ISUZU', caption: 'Mobile app', isMidLayer: true },
   { side: 'left', offsetX: -1.5, offsetY: 45, width: 200, height: 160, rotation: -3, depth: 0.5, art: 'code', tech: 'NestJS', title: 'orders.controller.ts', caption: 'NestJS', isMidLayer: true },
-  { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, seed: 'shop-mock', title: 'Mercado shop', caption: 'E-commerce · 2024' },
-  { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, seed: 'server-green', title: 'Platform API', caption: 'Node.js · 2025' },
-  { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, seed: 'glass-ui', title: 'Helpdesk AI', caption: 'LLM · 2025' },
+  { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, src: shot('pakprik', 'product.webp'), logo: shot('pakprik', 'logo.png'), title: 'PAK PRIK', caption: 'E-commerce' },
+  { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, src: shot('willow-court', 'home.webp'), logo: shot('willow-court', 'logo.png'), title: 'Willow Court', caption: 'Demo site' },
+  { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, src: shot('sigmalearn', 'past-papers.webp'), logo: shot('sigmalearn', 'logo.svg'), title: 'Sigma Learn', caption: 'Next.js · EdTech' },
   { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, art: 'schema', tech: 'PostgreSQL', title: 'schema.sql', caption: 'PostgreSQL', isMidLayer: true },
   { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, art: 'api', tech: 'TypeScript', title: 'GET /orders/1042', caption: 'TypeScript API' },
-  { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, seed: 'poster-grid', title: 'This portfolio', caption: 'SvelteKit · 2026' },
+  { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, src: shot('portfolio', 'home.webp'), logo: '/favicon.svg', title: 'This portfolio', caption: 'SvelteKit · 2026' },
 ];
 
 /** Hero tech stack. Logo paths and colours from simple-icons (CC0), 24×24 viewBox. */
@@ -48,112 +41,99 @@ export const rotatingWords: string[] = ['web apps', 'APIs', 'dashboards', 'mobil
 
 export const projects: Project[] = [
   {
+    id: 'engineeringscore', label: 'Website audit SaaS',
+    name: 'EngineeringScore', logo: shot('engineeringscore', 'logo.png'), url: 'https://engineeringscore.com/',
+    summary: 'Scans a website for security, performance, SEO, accessibility and reliability, then scores it with a transparent method.',
+    description: 'Scores a site with a transparent, deterministic method and hands back a prioritised roadmap of what to fix first. Free scans check the homepage; paid plans scan up to 25 pages. Delivered by We Do Dev Work.',
+    myRole: 'Team member, We Do Dev Work',
+    stats: [{ value: '5', label: 'Audit areas' }, { value: '25', label: 'Pages per scan' }, { value: 'Free', label: 'Homepage scan' }, { value: 'Live', label: 'Status' }],
+    banner: { type: 'image', src: shot('engineeringscore', 'home.webp') },
+    stack: ['SvelteKit', 'Supabase'],
+    gallery: [{ src: shot('engineeringscore', 'home.webp'), height: 190, badge: 'Live' }, { src: shot('engineeringscore', 'checks.webp'), height: 230 }, { src: shot('engineeringscore', 'report.webp'), height: 170 }],
+    highlights: [
+      { title: 'Five-area scan', detail: 'Security, performance, SEO, a11y, reliability', src: shot('engineeringscore', 'checks.webp') },
+      { title: 'Prioritised roadmap', detail: 'What to fix first, with a sample report', src: shot('engineeringscore', 'report.webp') },
+      { title: 'No signup to start', detail: 'Paste a URL, get a score', src: shot('engineeringscore', 'home.webp') },
+    ],
+  },
+  {
+    id: 'my-isuzu', label: 'Mobile app',
+    name: 'my-ISUZU', logo: shot('my-isuzu', 'logo.png'), url: 'https://apps.apple.com/th/app/my-isuzu/id1612415578', year: '2022',
+    summary: 'Official app for Isuzu owners in Thailand by Tri Petch Isuzu Sales: service booking, vehicle status, coupons and an owner community.',
+    description: 'Owners book service appointments, check their vehicle and warranty status, receive e-quotations for repairs, collect my-MEMBER points and coupons, and share experiences in the my-CIRCLE community.',
+    myRole: 'Team member',
+    stats: [{ value: '4.1★', label: 'App Store' }, { value: '439', label: 'Ratings' }, { value: '2022', label: 'Live since' }, { value: 'v4.17', label: 'Version' }],
+    banner: { type: 'gradient', label: 'my-ISUZU' },
+    // PLACEHOLDER: add the app's real tech stack.
+    stack: [],
+    gallery: [1, 2, 3, 4, 5].map((index) => ({ src: shot('my-isuzu', `screen-${index}.webp`), height: 300, badge: index === 1 ? 'App Store' : undefined })),
+    highlights: [
+      { title: 'Service booking', detail: 'Pick car, centre, date and time', src: shot('my-isuzu', 'screen-3.webp') },
+      { title: 'my-MEMBER', detail: 'Points, tiers and coupons', src: shot('my-isuzu', 'screen-2.webp') },
+      { title: 'my-CIRCLE', detail: 'Isuzu owner community', src: shot('my-isuzu', 'screen-4.webp') },
+    ],
+  },
+  {
+    id: 'sigmalearn', label: 'EdTech + AI',
+    name: 'Sigma Learn', logo: shot('sigmalearn', 'logo.svg'), url: 'https://sigmalearn.io/',
+    summary: 'Revision platform for IGCSE, A Level, IB, AP and SAT with an AI tutor that knows the page you are on.',
+    description: 'Syllabus-mapped courses, past-paper questions marked against the real mark scheme, hands-on simulations, and an AI tutor that explains steps and marks written answers.',
+    // PLACEHOLDER: confirm your role.
+    myRole: 'Developer',
+    stats: [{ value: '51', label: 'Courses' }, { value: '1,760', label: 'Lessons' }, { value: '5', label: 'Curricula' }, { value: 'AI', label: 'Tutor' }],
+    banner: { type: 'image', src: shot('sigmalearn', 'home.webp') },
+    stack: ['Next.js', 'React'],
+    gallery: [{ src: shot('sigmalearn', 'home.webp'), height: 200, badge: 'Live' }, { src: shot('sigmalearn', 'past-papers.webp'), height: 240 }],
+    highlights: [
+      { title: 'Past papers, marked', detail: 'Against the real mark scheme', src: shot('sigmalearn', 'past-papers.webp') },
+      { title: 'AI tutor', detail: 'Knows the lesson you are on', src: shot('sigmalearn', 'home.webp') },
+    ],
+  },
+  {
+    id: 'pakprik', label: 'E-commerce',
+    name: 'PAK PRIK', logo: shot('pakprik', 'logo.png'), url: 'https://www.pakprik.com',
+    summary: 'Online shop for handcrafted Thai curry pastes, built around a family recipe story.',
+    description: 'Product catalogue, bundle offers, recipes and the brand story behind the curry paste recipes Grandma Somsri perfected over 60 years, with free shipping on larger orders.',
+    // PLACEHOLDER: confirm your role.
+    myRole: 'Developer',
+    stats: [{ value: '60+', label: 'Years of recipes' }, { value: '฿1,500', label: 'Free-ship threshold' }, { value: 'Shop', label: 'Online store' }, { value: 'Live', label: 'Status' }],
+    banner: { type: 'image', src: shot('pakprik', 'home.webp') },
+    stack: ['SvelteKit', 'Supabase'],
+    gallery: [{ src: shot('pakprik', 'home.webp'), height: 200, badge: 'Live' }, { src: shot('pakprik', 'product.webp'), height: 240 }, { src: shot('pakprik', 'story.webp'), height: 180 }],
+    highlights: [
+      { title: 'Product showcase', detail: 'Pastes, dishes and bundles', src: shot('pakprik', 'product.webp') },
+      { title: 'Brand story', detail: 'A recipe passed down with love', src: shot('pakprik', 'story.webp') },
+    ],
+  },
+  {
+    id: 'willow-court', label: 'Demo site', isDemo: true,
+    name: 'Willow Court', logo: shot('willow-court', 'logo.png'), url: 'https://tennis-court-rho.vercel.app/',
+    summary: 'Demo mockup of a private tennis club site: membership tiers, court booking and English/Thai.',
+    description: 'A concept build, not a real club: editorial hero, two membership tiers, a court-booking flow and a full Thai version.',
+    myRole: 'Design & build (demo)',
+    stats: [{ value: 'Demo', label: 'Mockup' }, { value: 'EN/TH', label: 'Languages' }, { value: '2', label: 'Membership tiers' }, { value: 'Vercel', label: 'Hosting' }],
+    banner: { type: 'image', src: shot('willow-court', 'home.webp') },
+    stack: ['SvelteKit', 'Vercel'],
+    gallery: [{ src: shot('willow-court', 'home.webp'), height: 200, badge: 'Demo' }, { src: shot('willow-court', 'thai.webp'), height: 220 }],
+    highlights: [
+      { title: 'Editorial hero', detail: 'Full-bleed photo, serif type', src: shot('willow-court', 'home.webp') },
+      { title: 'Thai version', detail: 'Every page in EN and TH', src: shot('willow-court', 'thai.webp') },
+    ],
+  },
+  {
     id: 'portfolio', label: 'This portfolio',
-    name: 'Portfolio site', logoSeed: 'poster-grid', year: '2026',
+    name: 'Portfolio site', logo: '/favicon.svg', year: '2026',
     summary: 'The site you’re on: a scroll-driven, bilingual landing page built as typed Svelte components.',
-    description: 'Started as a single imperative script and refactored into 18 typed Svelte 5 components with rune-based i18n, prerendered to static HTML.',
+    description: 'Started as a single imperative script and refactored into typed Svelte 5 components with rune-based i18n, a Memoji intro and a handwritten signature, prerendered to static HTML.',
     myRole: 'Design & engineering',
-    stats: [{ value: '18', label: 'Components' }, { value: '2', label: 'Languages' }, { value: '0', label: 'Runtime deps' }, { value: 'Static', label: 'Hosting' }],
+    stats: [{ value: '2', label: 'Languages' }, { value: '0', label: 'Runtime deps' }, { value: 'Static', label: 'Hosting' }, { value: 'TS', label: 'Typed' }],
     banner: { type: 'type', text: 'SVELTE', emphasis: 'KIT' },
-    stack: ['SvelteKit', 'TypeScript', 'CSS animation'],
-    gallery: [{ seed: 'poster-grid', height: 250 }, { seed: 'phone-landing', height: 200 }, { seed: 'brand-cards', height: 140, badge: 'Live' }, { seed: 'glass-ui', height: 180 }],
+    stack: ['SvelteKit', 'TypeScript'],
+    gallery: [{ src: shot('portfolio', 'home.webp'), height: 230, badge: 'Live' }],
     highlights: [
-      { title: 'Scroll-driven showcase', detail: 'Pinned section steps through projects', seed: 'glass-ui' },
-      { title: 'English / Thai', detail: 'Reactive i18n with saved preference', seed: 'brand-cards' },
-      { title: 'Prerendered', detail: 'Static HTML, hydrated on load', seed: 'server-green' },
+      { title: 'Scroll-driven showcase', detail: 'Pinned section steps through projects', src: shot('portfolio', 'home.webp') },
     ],
   },
-  // PLACEHOLDER projects below: replace with real work.
-  {
-    id: 'pulse-analytics', label: 'SaaS dashboard',
-    name: 'Pulse Analytics', logoSeed: 'dashboard-ui', year: '2025',
-    summary: 'Real-time analytics dashboard for a B2B SaaS product.',
-    description: 'Multi-tenant dashboard with live charts, role-based access and CSV exports.',
-    myRole: 'Full-stack lead',
-    stats: [{ value: '12K', label: 'Users' }, { value: '40ms', label: 'p95 API' }, { value: '3', label: 'Months' }, { value: '99.9%', label: 'Uptime' }],
-    banner: { type: 'image', seed: 'dashboard-ui' },
-    stack: ['SvelteKit', 'PostgreSQL', 'WebSockets'],
-    gallery: [{ seed: 'dashboard-ui', height: 190 }, { seed: 'grade-before', height: 250, badge: 'Live' }, { seed: 'studio-desk', height: 140 }, { seed: 'glass-ui', height: 160 }, { seed: 'server-stack', height: 210 }],
-    highlights: [
-      { title: 'Live charts', detail: 'Streaming updates over WebSockets', seed: 'grade-before' },
-      { title: 'Team permissions', detail: 'Roles and audit log', seed: 'studio-desk' },
-      { title: 'Exports', detail: 'CSV and scheduled email reports', seed: 'server-stack' },
-    ],
-  },
-  {
-    id: 'mercado-shop', label: 'E-commerce',
-    name: 'Mercado Shop', logoSeed: 'shop-mock', year: '2024',
-    summary: 'Storefront and back office for an independent retailer.',
-    description: 'Headless storefront with Stripe checkout, inventory sync and an admin for orders and refunds.',
-    myRole: 'Full-stack developer',
-    stats: [{ value: '+38%', label: 'Conversion' }, { value: '1.1s', label: 'LCP' }, { value: '2K', label: 'SKUs' }, { value: '24/7', label: 'Orders' }],
-    banner: { type: 'image', seed: 'shop-mock' },
-    stack: ['Next.js', 'Stripe', 'Prisma'],
-    gallery: [{ seed: 'shop-mock', height: 240 }, { seed: 'packaging', height: 150 }, { seed: 'cafe-site', height: 180, badge: 'Live' }, { seed: 'sticker-pack', height: 210 }],
-    highlights: [
-      { title: 'One-page checkout', detail: 'Stripe Payment Element', seed: 'packaging' },
-      { title: 'Inventory sync', detail: 'Nightly sync with the POS', seed: 'sticker-pack' },
-      { title: 'Admin', detail: 'Orders, refunds and discounts', seed: 'dashboard-ui' },
-    ],
-  },
-  {
-    id: 'queue-app', label: 'Mobile app',
-    name: 'Queue', logoSeed: 'phone-landing', year: '2025',
-    summary: 'Booking and queue app for clinics, on iOS and Android.',
-    description: 'Expo app with push reminders, offline-first booking and a web dashboard for staff.',
-    myRole: 'Mobile + backend',
-    stats: [{ value: '4.8★', label: 'Store rating' }, { value: '15', label: 'Clinics' }, { value: '-60%', label: 'Wait time' }, { value: '2', label: 'Platforms' }],
-    banner: { type: 'gradient', label: 'iOS · Android' },
-    stack: ['React Native', 'Expo', 'Supabase'],
-    gallery: [{ seed: 'phone-landing', height: 260 }, { seed: 'creator-cam', height: 150 }, { seed: 'warm-interior', height: 190 }, { seed: 'glass-ui', height: 140, badge: 'App Store' }],
-    highlights: [
-      { title: 'Offline-first', detail: 'Books even with no signal', seed: 'creator-cam' },
-      { title: 'Push reminders', detail: 'Fewer no-shows', seed: 'warm-interior' },
-    ],
-  },
-  {
-    id: 'helpdesk-ai', label: 'AI tool',
-    name: 'Helpdesk AI', logoSeed: 'server-stack', year: '2025',
-    summary: 'Support assistant that answers from a company’s own docs.',
-    description: 'Retrieval-augmented chatbot with source citations, human handoff and an admin to manage documents.',
-    myRole: 'Full-stack developer',
-    stats: [{ value: '70%', label: 'Auto-resolved' }, { value: '<2s', label: 'Answer time' }, { value: '5K', label: 'Docs indexed' }, { value: 'EN/TH', label: 'Languages' }],
-    banner: { type: 'gradient', label: 'AI assistant' },
-    stack: ['Python', 'Claude API', 'RAG'],
-    gallery: [
-      { caseStudy: { seed: 'server-stack', title: 'Answering from your own docs', excerpt: 'How retrieval and citations keep answers grounded in what the company actually wrote.', readMinutes: 4 } },
-      { seed: 'server-green', height: 130 }, { seed: 'glass-ui', height: 185, badge: 'Beta' }, { seed: 'conference-badge', height: 230 },
-    ],
-    highlights: [
-      { title: 'Cited answers', detail: 'Every reply links its source', seed: 'server-green' },
-      { title: 'Human handoff', detail: 'Escalates to the support inbox', seed: 'glass-ui' },
-    ],
-  },
-  {
-    id: 'platform-api', label: 'API & backend',
-    name: 'Platform API', logoSeed: 'server-green', year: '2024',
-    summary: 'Public REST API and webhooks for a logistics platform.',
-    description: 'Versioned REST API with OAuth, rate limiting, webhooks and generated docs.',
-    myRole: 'Backend lead',
-    stats: [{ value: '30M', label: 'Requests/mo' }, { value: '99.95%', label: 'Uptime' }, { value: '120', label: 'Endpoints' }, { value: '18', label: 'Integrations' }],
-    banner: { type: 'type', text: 'REST', emphasis: 'API' },
-    stack: ['Node.js', 'PostgreSQL', 'Docker'],
-    gallery: [{ seed: 'server-green', height: 170 }, { seed: 'drone-coast', height: 240 }, { seed: 'silver-car', height: 140, badge: 'v2' }, { seed: 'city-tower', height: 200 }],
-    highlights: [
-      { title: 'OAuth & API keys', detail: 'Scoped access per partner', seed: 'silver-car' },
-      { title: 'Webhooks', detail: 'Signed, retried, replayable', seed: 'drone-coast' },
-      { title: 'Generated docs', detail: 'OpenAPI spec and examples', seed: 'city-tower' },
-    ],
-  },
-];
-
-// PLACEHOLDER testimonials: replace with real client quotes (with their permission).
-export const testimonials: Testimonial[] = [
-  { name: 'Hannah Kim', avatarId: 32, text: 'Shipped exactly what we scoped, on time, and explained every trade-off.', title: 'Product lead' },
-  { name: 'Elena Rossi', avatarId: 45, text: 'Fast replies, clean code, and a weekly demo we could actually click.', title: 'Founder' },
-  { name: 'Maya Chen', avatarId: 49, text: 'Took our messy MVP to something we could sell. Would hire again.', title: 'CEO' },
-  { name: 'Linh Tran', avatarId: 41, text: 'Frontend and backend from one person — no handoff gaps.', title: 'CTO' },
-  { name: 'Tom Walker', avatarId: 14, text: 'Our API went from flaky to boring. Boring is great.', title: 'Engineering manager' },
 ];
 
 export const notes: StickyNote[] = [

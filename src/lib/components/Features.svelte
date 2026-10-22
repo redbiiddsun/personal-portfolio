@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { inView, reveal } from '#lib/actions.ts';
-  import { OWNER, avatar, img, projects, testimonials } from '#lib/data.ts';
+  import { OWNER, avatar, projects } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
   import Sweep from './Sweep.svelte';
@@ -12,16 +12,20 @@
   const HOLD_MS = 1600;
   const NEXT_QUERY_PAUSE_MS = 300;
   const HIGHLIGHTS_PER_PROJECT = 2;
+  const PROFILE_SHOT_COUNT = 2;
   const PROFILE_AVATAR_PX = 120;
   /** PLACEHOLDER: swap for your own photo. */
   const PROFILE_PHOTO = avatar(36, PROFILE_AVATAR_PX);
   const technologyCount = new Set(projects.flatMap((project) => project.stack)).size;
+  const profileShots = projects
+    .flatMap((project) => (project.banner.type === 'image' ? [project.banner.src] : []))
+    .slice(0, PROFILE_SHOT_COUNT);
   const FLAGS = ['🇰🇷', '🇺🇸', '🇹🇭', '🇯🇵', '🇪🇺', '🇬🇧'];
 
   // Marquees loop seamlessly by rendering their items twice.
-  const marqueeTestimonials = [...testimonials, ...testimonials];
+  const marqueeProjects = [...projects, ...projects];
   const discoveryResults = projects.flatMap((project) =>
-    project.highlights.slice(0, HIGHLIGHTS_PER_PROJECT).map((highlight) => ({ ...highlight, projectName: project.name })),
+    project.highlights.slice(0, HIGHLIGHTS_PER_PROJECT).map((highlight) => ({ ...highlight, projectName: project.name, isDemo: project.isDemo })),
   );
   const marqueeResults = [...discoveryResults, ...discoveryResults];
 
@@ -55,7 +59,7 @@
 <section class="features" id="features" data-theme="dark">
   <h2 class="h2" use:reveal>{t('feat.title')}</h2>
 
-  <!-- 1. Products + client feedback -->
+  <!-- 1. Products + project marquee -->
   <div class="f-row" use:inView>
     <div class="f-card grad-1">
       <div class="mini-profile">
@@ -65,12 +69,12 @@
         <small class="mp-loc">● Booking from Nov 2026</small>
         <div class="mp-gap"></div>
         <div class="mp-stats"><span><b>{projects.length}</b>Projects</span><span><b>{technologyCount}</b>Technologies</span><span><b>EN/TH</b>Languages</span><span><b>&lt;24h</b>Replies</span></div>
-        <div class="mp-shots"><img src={img('dashboard-ui', 300, 220)} alt="" /><img src={img('shop-mock', 300, 220)} alt="" /></div>
+        <div class="mp-shots">{#each profileShots as shotSrc (shotSrc)}<img src={shotSrc} alt="" />{/each}</div>
       </div>
       <div class="rev-marquee">
         <div class="rev-track">
-          {#each marqueeTestimonials as quote, index (index)}
-            <div class="rev-card"><div class="s">5.0</div><p>“{quote.text}”</p><div class="who"><img src={avatar(quote.avatarId)} alt="" />{quote.name}</div></div>
+          {#each marqueeProjects as project, index (index)}
+            <div class="rev-card"><div class="s">{project.label}</div><p>{project.summary}</p><div class="who"><img src={project.logo} alt="" />{project.name}{#if project.isDemo} · Demo{/if}</div></div>
           {/each}
         </div>
       </div>
@@ -86,8 +90,8 @@
         <div class="disc-track">
           {#each marqueeResults as result, index (index)}
             <div class="disc-item">
-              <img src={img(result.seed, 200, 160)} alt="" loading="lazy" />
-              <div><b>{result.title}</b><small>{result.projectName}</small><div class="r">{result.detail}</div></div>
+              <img src={result.src} alt="" loading="lazy" />
+              <div><b>{result.title}</b><small>{result.projectName}{#if result.isDemo} · Demo{/if}</small><div class="r">{result.detail}</div></div>
             </div>
           {/each}
         </div>

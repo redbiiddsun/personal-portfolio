@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { heroShotImage, heroShots, logoImage, techStack } from '#lib/data.ts';
+  import { heroShots, techStack } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
   import { prefersReducedMotion } from '#lib/utils.ts';
   import DevArt from './DevArt.svelte';
@@ -79,14 +79,14 @@
       >
         <div class="hc-par" bind:this={parallaxLayers[index]}>
           <div class="hc-body">
-            {#if 'seed' in card}
-              <img class="hc-img" src={heroShotImage(card)} alt="" />
+            {#if 'src' in card}
+              <img class="hc-img" src={card.src} alt="" />
             {:else}
               <DevArt kind={card.art} />
             {/if}
             <div class="hc-meta">
-              {#if 'seed' in card}
-                <span class="av"><img src={logoImage(card.seed)} alt="" /><i></i></span>
+              {#if 'src' in card}
+                <span class="av"><img src={card.logo} alt="" /><i></i></span>
               {:else}
                 {@const tech = techStack.find((logo) => logo.name === card.tech)}
                 {#if tech}
