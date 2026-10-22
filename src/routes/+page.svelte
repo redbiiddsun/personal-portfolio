@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import '#lib/style.css';
+  import { OWNER } from '#lib/data.ts';
   import { restoreLang } from '#lib/i18n.svelte.ts';
-  import ConsentToast from '#lib/components/ConsentToast.svelte';
   import Features from '#lib/components/Features.svelte';
   import FinalCta from '#lib/components/FinalCta.svelte';
   import Footer from '#lib/components/Footer.svelte';
@@ -13,7 +13,6 @@
   import Notes from '#lib/components/Notes.svelte';
   import People from '#lib/components/People.svelte';
   import Showcase from '#lib/components/Showcase.svelte';
-  import SignupDialog from '#lib/components/SignupDialog.svelte';
 
   let heroCardElements: HTMLElement[] = $state([]);
 
@@ -21,8 +20,8 @@
 </script>
 
 <svelte:head>
-  <title>craftly · Show the world what you can do</title>
-  <meta name="description" content="In the age of AI, your portfolio proves why clients need you." />
+  <title>{OWNER.name} · {OWNER.title}</title>
+  <meta name="description" content="{OWNER.name} ({OWNER.nickname}), a full-stack developer building web apps, APIs and mobile apps end to end." />
 </svelte:head>
 
 <Intro cards={heroCardElements} />
@@ -41,5 +40,3 @@
   <Footer />
 </main>
 
-<SignupDialog />
-<ConsentToast />
