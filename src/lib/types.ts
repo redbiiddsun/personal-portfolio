@@ -85,12 +85,26 @@ export interface Project {
   highlights: Highlight[];
 }
 
-export interface StickyNote {
-  color: string;
-  leftPercent: number;
-  topPx: number;
-  rotation: number;
-  text: Record<Lang, string>;
+export interface JobLink {
+  label: string;
+  url: string;
 }
+
+export interface Job {
+  company: string;
+  role: string;
+  employment: 'Full-time' | 'Freelance' | 'Internship' | 'Project-based';
+  /** Work arrangement or city, e.g. "Remote", "Hybrid", "Bangkok". */
+  location: string;
+  period: string;
+  /** One-line summary shown on the note; `highlights` open under Details. */
+  summary: string;
+  highlights: string[];
+  stack: string[];
+  links: JobLink[];
+  /** Sticky-note paper colour. */
+  color: string;
+}
+
 
 export type ProjectTab = 'gallery' | 'highlights' | 'details';

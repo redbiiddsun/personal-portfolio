@@ -6,11 +6,11 @@
   import Features from '#lib/components/Features.svelte';
   import FinalCta from '#lib/components/FinalCta.svelte';
   import Footer from '#lib/components/Footer.svelte';
+  import Experience from '#lib/components/Experience.svelte';
   import Hero from '#lib/components/Hero.svelte';
   import Intro from '#lib/components/Intro.svelte';
   import Keep from '#lib/components/Keep.svelte';
   import Nav from '#lib/components/Nav.svelte';
-  import Notes from '#lib/components/Notes.svelte';
   import People from '#lib/components/People.svelte';
   import Showcase from '#lib/components/Showcase.svelte';
 
@@ -33,7 +33,7 @@
     <People />
     <Showcase />
   </div>
-  <Notes />
+  <Experience />
   <Keep />
   <Features />
   <FinalCta />
