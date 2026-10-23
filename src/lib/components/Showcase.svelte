@@ -4,7 +4,6 @@
   import { goto } from '$app/navigation';
   import { projects } from '#lib/data.ts';
   import { localize, t } from '#lib/i18n.svelte.ts';
-  import type { ProjectTab } from '#lib/types.ts';
   import { onScrollFrame, prefersReducedMotion } from '#lib/utils.ts';
   import ProjectCard from './ProjectCard.svelte';
 
@@ -28,7 +27,6 @@
   let section: HTMLElement;
   let activeIndex = $state(0);
   let shownIndex = $state(0);
-  let tab = $state<ProjectTab>('gallery');
   let isIntro = $state(true);
   let isSwapping = $state(false);
 
@@ -52,7 +50,6 @@
     isSwapping = true;
     swapTimer = setTimeout(() => {
       shownIndex = index;
-      tab = 'gallery';
       isSwapping = false;
     }, SWAP_MS);
   };
@@ -68,9 +65,8 @@
   // Warm the cache for the other projects so swaps don't flash empty tiles.
   const warmImages = () => {
     const urls = projects.flatMap((project) => [
-      ...project.gallery.map((tile) => tile.src),
+      ...project.gallery,
       ...project.highlights.map((highlight) => highlight.src),
-      ...(project.banner.type === 'image' ? [project.banner.src] : []),
       project.logo,
     ]);
     const whenIdle = window.requestIdleCallback ?? ((callback: () => void) => setTimeout(callback, WARM_IMAGES_DELAY_MS));
@@ -131,15 +127,16 @@
     </div>
     <article
       class={[
-        'relative h-[min(80vh,760px)] overflow-hidden rounded-[28px] bg-white px-[30px] pt-[30px] shadow-[0_0_0_9px_#f1f2f4,0_20px_60px_rgba(20,24,33,.08)] transition-[translate] duration-800 ease-smooth [mask-image:linear-gradient(#000_85%,transparent)] max-[900px]:h-auto max-[900px]:px-[18px] max-[900px]:pt-5',
+        'relative h-[min(80vh,760px)] overflow-hidden rounded-[28px] bg-white p-4 shadow-[0_0_0_9px_#f1f2f4,0_20px_60px_rgba(20,24,33,.08)] transition-[translate] duration-800 ease-smooth max-[900px]:h-auto max-[900px]:p-3',
         isIntro && '-translate-x-[152px] max-[900px]:translate-x-0',
       ]}
     >
       <div
-        class={['transition-[opacity,translate] duration-[var(--swap),.35s] ease-smooth', isSwapping && 'translate-y-2.5 opacity-0']}
+        class={['h-full transition-[opacity,translate] duration-[var(--swap),.35s] ease-smooth', isSwapping && 'translate-y-2.5 opacity-0']}
         style:--swap="{SWAP_MS}ms"
       >
-        <ProjectCard project={projects[shownIndex]} bind:tab />
+        <!-- Keyed so each project opens on its first screenshot with details closed. -->
+        {#key shownIndex}<ProjectCard project={projects[shownIndex]} />{/key}
       </div>
     </article>
   </div>
