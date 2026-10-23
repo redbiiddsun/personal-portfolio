@@ -4,9 +4,10 @@
   import { heroShots } from '#lib/data.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
   import DevArt from './DevArt.svelte';
-  import { SWEEP_COLORS } from './Sweep.svelte';
+  import HelloSignature, { HELLO_DURATION_MS, HELLO_FONT } from './HelloSignature.svelte';
 
-  let { cards }: { cards: HTMLElement[] } = $props();
+  /** `isPlaying` is true while the overlay covers the page, so the parent can make the page inert. */
+  let { cards, isPlaying = $bindable(false) }: { cards: HTMLElement[]; isPlaying?: boolean } = $props();
 
   const SKIP_IF_SCROLLED_PX = 40;
   const MAX_RADIUS_PX = 240;
@@ -21,39 +22,12 @@
   /** Ring radius as a fraction of the viewport width / height. */
   const RADIUS_WIDTH_RATIO = 0.32;
   const RADIUS_HEIGHT_RATIO = 0.34;
-  const FADE_OUT_MS = 600;
+  /** Keep the overlay mounted this long after handoff, while the cards fly out from under it. */
+  const REMOVE_DELAY_MS = 600;
   /** Memoji fade-out duration; drives the greeting fade via `--memoji-fade`. */
   const MEMOJI_FADE_MS = 600;
   /** Give up on the greeting if it hasn't finished by now (slow network, stalled decode). */
   const MEMOJI_MAX_MS = 4500;
-  const HELLO_TEXT = 'hello, I’m Sun';
-  /** Single source for the signature font: used for font loading and, via `--hello-font`, by CSS. */
-  const HELLO_FONT = "110px 'Sacramento', cursive";
-  /**
-   * Outline length of each glyph in Sacramento at 110px (measured from the font file with fontTools).
-   * Each letter's dash equals its outline, so it is fully "written" exactly when its draw ends.
-   */
-  const HELLO_OUTLINE_LENGTHS: Record<string, number> = {
-    h: 427, e: 164, l: 333, o: 201, ',': 40, I: 462, '’': 40, m: 344, S: 557, u: 186, n: 241,
-  };
-  /** Each letter's outline draws over this long, starting this far after the previous letter. */
-  const HELLO_LETTER_DRAW_MS = 700;
-  const HELLO_LETTER_STAGGER_MS = 160;
-  const HELLO_FILL_MS = 500;
-  /**
-   * Pen width (viewBox units). Sacramento has a single thin weight; a pen this thick covers each letter's
-   * outline, so the text reads as bold from the first stroke, not only once it fills in.
-   */
-  const HELLO_STROKE = 5;
-  const HELLO_WRITTEN_MS =
-    (HELLO_TEXT.length - 1) * HELLO_LETTER_STAGGER_MS + HELLO_LETTER_DRAW_MS + HELLO_FILL_MS;
-  /** Once written in ink, colour fills each letter in turn, left to right, and stays. */
-  const HELLO_COLOR_MS = 400;
-  const HELLO_COLOR_STAGGER_MS = 80;
-  /** Hold the finished, coloured greeting on screen this long before the intro fades. */
-  const HELLO_HOLD_MS = 900;
-  const HELLO_DURATION_MS =
-    HELLO_WRITTEN_MS + (HELLO_TEXT.length - 1) * HELLO_COLOR_STAGGER_MS + HELLO_COLOR_MS + HELLO_HOLD_MS;
   /** Don't hold the intro hostage to a slow font download. */
   const HELLO_FONT_MAX_WAIT_MS = 1500;
 
@@ -66,7 +40,7 @@
   let isMemojiShown = $state(true);
   let isMemojiFading = $state(false);
   let isHelloDrawing = $state(false);
-  /** Replaced on mount; clicking the ring before then is a no-op. */
+  /** Replaced on mount; a click or key press before then is a no-op. */
   let handoff = () => {};
 
   const slotAngle = (index: number) => (index * 360) / heroShots.length;
@@ -121,6 +95,7 @@
       return;
     }
     body.add('overflow-hidden');
+    isPlaying = true;
     radius = Math.min(innerWidth * RADIUS_WIDTH_RATIO, innerHeight * RADIUS_HEIGHT_RATIO, MAX_RADIUS_PX);
     // Fetch the ring shots while the greeting plays, so the ring appears fully loaded.
     heroShots.forEach((shot) => {
@@ -135,9 +110,10 @@
       cancelAnimationFrame(frame);
       flyCardsHome();
       isGone = true;
+      isPlaying = false;
       body.remove('overflow-hidden');
       body.add('ready');
-      setTimeout(() => (isRemoved = true), FADE_OUT_MS);
+      setTimeout(() => (isRemoved = true), REMOVE_DELAY_MS);
     };
 
     const startSpin = () => {
@@ -166,18 +142,21 @@
 
     return () => {
       isHandedOff = true;
+      isPlaying = false;
       cancelAnimationFrame(frame);
     };
   });
 </script>
 
+<!-- Any key skips the intro, as a click does. -->
+<svelte:window onkeydown={() => handoff()} />
+
 {#if !isRemoved}
-  <!-- Click skips the intro; it's aria-hidden decoration, so no keyboard path is needed. -->
+  <!-- Hidden instantly on handoff (no fade): the hero cards take over the ring positions in the same frame. -->
+  <!-- Keyboard skip is the window listener above; the overlay itself is aria-hidden decoration. -->
   <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
   <div
-    class={['fixed inset-0 z-100 grid cursor-pointer place-items-center bg-white transition-opacity duration-500 motion-reduce:hidden', isGone && 'pointer-events-none opacity-0']}
-    style:transition={isGone ? 'none' : undefined}
-    style:opacity={isGone ? '0' : undefined}
+    class={['fixed inset-0 z-100 grid cursor-pointer place-items-center bg-white motion-reduce:hidden', isGone && 'pointer-events-none opacity-0']}
     aria-hidden="true"
     onclick={() => handoff()}
   >
@@ -203,21 +182,7 @@
           <source src="/intro/memoji.mov" type={'video/quicktime; codecs="hvc1"'} />
           <source src="/intro/memoji.webm" type="video/webm" />
         </video>
-        <svg
-          class={['intro-hello mt-[calc(var(--memoji-width)*-.12)] w-[min(760px,94vw)] overflow-visible', isHelloDrawing && 'drawing']}
-          viewBox="0 0 760 130"
-          style:--hello-font={HELLO_FONT}
-          style:--hello-stroke={HELLO_STROKE}
-          style:--letter-draw="{HELLO_LETTER_DRAW_MS}ms"
-          style:--letter-stagger="{HELLO_LETTER_STAGGER_MS}ms"
-          style:--fill="{HELLO_FILL_MS}ms"
-          style:--fill-delay="{HELLO_WRITTEN_MS - HELLO_FILL_MS}ms"
-          style:--color="{HELLO_COLOR_MS}ms"
-          style:--color-delay="{HELLO_WRITTEN_MS}ms"
-          style:--color-stagger="{HELLO_COLOR_STAGGER_MS}ms"
-        >
-          <text x="380" y="95" text-anchor="middle">{#each HELLO_TEXT as letter, index (index)}<tspan style:--i={index} style:--outline={HELLO_OUTLINE_LENGTHS[letter] ?? 0} style:--c={SWEEP_COLORS[index % SWEEP_COLORS.length]}>{letter}</tspan>{/each}</text>
-        </svg>
+        <HelloSignature isDrawing={isHelloDrawing} class="mt-[calc(var(--memoji-width)*-.12)] w-[min(760px,94vw)]" />
       </div>
     {:else}
       <div class="relative size-0" bind:this={ring} style:transform="rotate({angle}deg)">
