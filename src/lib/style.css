@@ -33,14 +33,12 @@
 
   --animate-bob: bob 1.6s ease-in-out infinite;
   --animate-blink: blink 1s steps(1) infinite;
-  --animate-drift: drift 9s linear infinite alternate;
   --animate-fade-up: fade-up .45s var(--ease-smooth);
   --animate-marquee: marquee 40s linear infinite;
   --animate-scroll-up: scroll-up 26s linear infinite;
 
   @keyframes bob { 50% { transform: translateY(5px); } }
   @keyframes blink { 50% { opacity: 0; } }
-  @keyframes drift { to { transform: translateX(-30px); } }
   @keyframes fade-up { from { opacity: 0; transform: translateY(8px); } }
   /* Tracks render their items twice, so -50% loops seamlessly. */
   @keyframes marquee { to { transform: translateX(-50%); } }

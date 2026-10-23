@@ -42,15 +42,6 @@ export interface TechIcon {
   tile?: string;
 }
 
-export type GalleryBadge = 'live' | 'demo' | 'appStore';
-
-export interface GalleryTile {
-  src: string;
-  /** Rendered tile height in px (masonry). */
-  height: number;
-  badge?: GalleryBadge;
-}
-
 export interface Highlight {
   title: LocalText;
   detail: LocalText;
@@ -61,12 +52,6 @@ export interface ProjectStat {
   value: LocalText;
   label: LocalText;
 }
-
-export type Banner =
-  /** Repeated typographic banner: `text` then bold `emphasis`. */
-  | { type: 'type'; text: string; emphasis: string }
-  | { type: 'gradient'; label: string }
-  | { type: 'image'; src: string };
 
 export interface Project {
   id: string;
@@ -82,9 +67,9 @@ export interface Project {
   description: LocalText;
   myRole: LocalText;
   stats: ProjectStat[];
-  banner: Banner;
   stack: TechKey[];
-  gallery: GalleryTile[];
+  /** Screenshots under /static; the first is the cover. */
+  gallery: string[];
   highlights: Highlight[];
 }
 
@@ -127,5 +112,3 @@ export interface StackLayer {
   label: LocalText;
   techs: TechKey[];
 }
-
-export type ProjectTab = 'gallery' | 'highlights' | 'details';
