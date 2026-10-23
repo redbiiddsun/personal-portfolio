@@ -81,8 +81,10 @@
       <div
         class={[
           'absolute w-[calc(var(--w)*var(--k,1))] opacity-0 transition-opacity duration-700 will-change-transform in-[.ready]:opacity-100 max-md:[--k:.58]',
-          card.isMidLayer && 'max-md:hidden',
-          card.offsetY > LOW_CARD_OFFSET && 'max-md:top-auto! max-md:-bottom-10',
+          card.isDesktopOnly && 'max-md:hidden',
+          /* Mobile: pin each remaining card to a corner, inside the screen edges and clear of the fixed nav. */
+          card.side === 'left' ? 'max-md:left-3!' : 'max-md:right-3!',
+          card.offsetY > LOW_CARD_OFFSET ? 'max-md:top-auto! max-md:-bottom-10' : 'max-md:top-[88px]!',
         ]}
         style="{card.side}:{card.offsetX}%;top:{card.offsetY}%;--w:{card.width}px;--h:{card.height}px;--r:{card.rotation}deg;--i:{index}"
         bind:this={cards[index]}

@@ -22,7 +22,8 @@ interface HeroShotBase {
   rotation: number;
   /** Parallax strength, 0–1. */
   depth: number;
-  isMidLayer?: boolean;
+  /** Left out of the mobile collage, which only has room for one card per corner. */
+  isDesktopOnly?: boolean;
   title: string;
   caption: LocalText;
 }
