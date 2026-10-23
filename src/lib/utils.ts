@@ -26,12 +26,11 @@ export const storage = {
 
 /** Coalesce scroll/resize bursts into one call per animation frame. Returns a cleanup. */
 export const onScrollFrame = (callback: () => void): (() => void) => {
-  let isQueued = false;
+  let frame = 0;
   const schedule = () => {
-    if (isQueued) return;
-    isQueued = true;
-    requestAnimationFrame(() => {
-      isQueued = false;
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
       callback();
     });
   };
@@ -41,5 +40,6 @@ export const onScrollFrame = (callback: () => void): (() => void) => {
   return () => {
     removeEventListener('scroll', schedule);
     removeEventListener('resize', schedule);
+    cancelAnimationFrame(frame);
   };
 };
