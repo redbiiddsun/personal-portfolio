@@ -5,6 +5,7 @@
   import { restoreLang } from '#lib/i18n.svelte.ts';
   import Features from '#lib/components/Features.svelte';
   import FinalCta from '#lib/components/FinalCta.svelte';
+  import CookieConsent from '#lib/components/CookieConsent.svelte';
   import Footer from '#lib/components/Footer.svelte';
   import Experience from '#lib/components/Experience.svelte';
   import Hero from '#lib/components/Hero.svelte';
@@ -79,5 +80,6 @@
   <FinalCta />
   <Footer />
 </main>
+<CookieConsent />
 </div>
 

@@ -5,11 +5,16 @@
   <meta charset="UTF-8" />
   <!-- Google tag (gtag.js) -->
   <!-- Runs only on the production host; keep the hostname in sync with SITE_URL in src/lib/data.ts. -->
+  <!-- Consent Mode v2: analytics cookies stay off until the visitor accepts in CookieConsent.svelte (storage key "consent", see src/lib/consent.svelte.ts). -->
   <script>
     (function () {
       if (location.hostname !== 'redbiiddsun.com') return;
       window.dataLayer = window.dataLayer || [];
       window.gtag = function gtag(){ dataLayer.push(arguments); };
+      var hasConsent = false;
+      try { hasConsent = localStorage.getItem('consent') === 'granted'; } catch (error) {}
+      gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: hasConsent ? 'granted' : 'denied' });
+
       var gtagLoader = document.createElement('script');
       gtagLoader.async = true;
       gtagLoader.src = 'https://www.googletagmanager.com/gtag/js?id=G-BB9H2QXLCQ';

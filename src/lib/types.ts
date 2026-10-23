@@ -2,6 +2,9 @@ import type { techIcons } from './tech-icons';
 
 export type Lang = 'en' | 'th';
 
+/** The visitor's answer to the cookie banner; maps to Google Consent Mode's `analytics_storage`. */
+export type Consent = 'granted' | 'denied';
+
 /** User-facing content: a plain string reads the same in every language (names, brands, code). */
 export type LocalText = string | Record<Lang, string>;
 

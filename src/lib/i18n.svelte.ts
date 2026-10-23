@@ -65,6 +65,11 @@ const english = {
     "final.note": "say hi!",
     "final.or": "or copy",
     "final.copied": "Copied",
+    "consent.title": "Cookie Preferences",
+    "consent.text": "This website uses Google Analytics cookies to understand how visitors use the site. No analytics cookies will be set unless you give your consent.",
+    "consent.accept": "Accept",
+    "consent.decline": "Decline",
+    "consent.settings": "Cookie Settings",
 };
 
 export type DictKey = keyof typeof english;
@@ -133,6 +138,11 @@ const dict: Record<Lang, Record<DictKey, string>> = {
         "final.note": "ทักมาได้เลย!",
         "final.or": "หรือคัดลอก",
         "final.copied": "คัดลอกแล้ว",
+        "consent.title": "การตั้งค่าคุกกี้",
+        "consent.text": "เว็บไซต์นี้ใช้คุกกี้ของ Google Analytics เพื่อวิเคราะห์การใช้งานเว็บไซต์ของผู้เข้าชม ทั้งนี้ จะไม่มีการจัดเก็บคุกกี้เพื่อการวิเคราะห์จนกว่าท่านจะให้ความยินยอม",
+        "consent.accept": "ยอมรับ",
+        "consent.decline": "ปฏิเสธ",
+        "consent.settings": "การตั้งค่าคุกกี้",
     },
 };
 
