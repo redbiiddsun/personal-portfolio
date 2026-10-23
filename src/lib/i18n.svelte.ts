@@ -1,9 +1,8 @@
-import type { Lang } from "./types";
+import type { Lang, LocalText } from "./types";
 import { storage } from "./utils";
 
 const LANG_STORAGE_KEY = "lang";
 
-// Values are plain text, except `people.sub` which is trusted markup (rendered with {@html}).
 const english = {
     cta: "Email me",
     "hero.l1": "Hi, I’m Sun.",
@@ -13,13 +12,33 @@ const english = {
     scroll: "Scroll down",
     "people.a": "Good software needs pe",
     "people.b": "ople",
-    "people.sub":
-        "AI can write code. Shipping a product people love still takes judgment, care and ownership.<br>That’s what I bring to every project.",
+    "people.sub1": "AI can write code. Shipping a product people love still takes judgment, care and ownership.",
+    "people.sub2": "That’s what I bring to every project.",
     "experience.title": "Where I’ve worked",
     "experience.sub": "From internships to production systems.",
     "experience.details": "Details",
     "experience.hide": "Hide details",
     "experience.hint": "Psst, open a note for the full story.",
+    "experience.present": "Present",
+    "employment.fullTime": "Full-time",
+    "employment.freelance": "Freelance",
+    "employment.internship": "Internship",
+    "employment.projectBased": "Project-based",
+    "project.demo": "Demo project",
+    "project.client": "Project",
+    "project.role": "My role",
+    "project.stack": "Stack",
+    "project.year": "Year",
+    "project.viewAll": "View all",
+    "tab.gallery": "Gallery",
+    "tab.highlights": "Highlights",
+    "tab.details": "Details",
+    "badge.live": "Live",
+    "badge.demo": "Demo",
+    "badge.appStore": "App Store",
+    "a11y.techStack": "Tech stack",
+    "a11y.projects": "Projects",
+    "a11y.home": "home",
     "keep.a": "I don’t just write code.",
     "keep.b": "I ship software that runs.",
     "k1.a": "The whole stack,",
@@ -36,7 +55,7 @@ const english = {
     "k3.to": "minutes",
     "feat.title": "One developer. The whole stack.",
     "f1.a": "Build",
-    "f1.b": "with Stack of your choice",
+    "f1.b": "with the stack of your choice",
     "f2.a": "Every feature,",
     "f2.b": "fast & findable",
     "f3.a": "Find me",
@@ -63,13 +82,33 @@ const dict: Record<Lang, Record<DictKey, string>> = {
         scroll: "เลื่อนลง",
         "people.a": "ซอฟต์แวร์ดี ๆ ต้องมี",
         "people.b": "คนทำ",
-        "people.sub":
-            "AI เขียนโค้ดได้ แต่การส่งมอบโปรดักต์ที่คนใช้แล้วรัก ยังต้องอาศัยวิจารณญาณ ความใส่ใจ และความรับผิดชอบ<br>นั่นคือสิ่งที่ Sun ใส่ลงไปในทุกโปรเจกต์",
+        "people.sub1": "AI เขียนโค้ดได้ แต่การส่งมอบโปรดักต์ที่คนใช้แล้วรัก ยังต้องอาศัยวิจารณญาณ ความใส่ใจ และความรับผิดชอบ",
+        "people.sub2": "นั่นคือสิ่งที่ Sun ใส่ลงไปในทุกโปรเจกต์",
         "experience.title": "ประสบการณ์ทำงาน",
         "experience.sub": "จากฝึกงาน สู่ระบบที่ใช้งานจริง",
         "experience.details": "รายละเอียด",
         "experience.hide": "ซ่อนรายละเอียด",
         "experience.hint": "เปิดโน้ตเพื่อดูรายละเอียดทั้งหมด",
+        "experience.present": "ปัจจุบัน",
+        "employment.fullTime": "งานประจำ",
+        "employment.freelance": "ฟรีแลนซ์",
+        "employment.internship": "ฝึกงาน",
+        "employment.projectBased": "รายโปรเจกต์",
+        "project.demo": "โปรเจกต์ตัวอย่าง",
+        "project.client": "โปรเจกต์",
+        "project.role": "บทบาทของผม",
+        "project.stack": "สแตก",
+        "project.year": "ปี",
+        "project.viewAll": "ดูทั้งหมด",
+        "tab.gallery": "แกลเลอรี",
+        "tab.highlights": "ไฮไลต์",
+        "tab.details": "รายละเอียด",
+        "badge.live": "ใช้งานจริง",
+        "badge.demo": "เดโม",
+        "badge.appStore": "App Store",
+        "a11y.techStack": "เทคโนโลยีที่ใช้",
+        "a11y.projects": "โปรเจกต์",
+        "a11y.home": "หน้าแรก",
         "keep.a": "ไม่ได้แค่เขียนโค้ด",
         "keep.b": "แต่ส่งงานที่ใช้งานได้จริง",
         "k1.a": "ครบทั้งสแตก",
@@ -86,7 +125,7 @@ const dict: Record<Lang, Record<DictKey, string>> = {
         "k3.to": "ไม่กี่นาที",
         "feat.title": "นักพัฒนาคนเดียว ครบทั้งสแตก",
         "f1.a": "สร้าง",
-        "f1.b": "โปรดักต์ที่ลูกค้ารัก",
+        "f1.b": "ด้วยสแตกที่คุณเลือก",
         "f2.a": "ทุกฟีเจอร์",
         "f2.b": "เร็วและค้นเจอง่าย",
         "f3.a": "ติดตามผม",
@@ -105,6 +144,9 @@ export const locale = $state<{ lang: Lang }>({ lang: "en" });
 
 export const t = (key: DictKey) => dict[locale.lang][key];
 
+/** Resolve a content field from `data.ts` in the current language. */
+export const localize = (text: LocalText) => (typeof text === "string" ? text : text[locale.lang]);
+
 export const setLang = (lang: Lang) => {
     locale.lang = lang;
     document.documentElement.lang = lang;
@@ -113,5 +155,6 @@ export const setLang = (lang: Lang) => {
 
 /** Apply the saved language. Call on mount, so prerendered HTML stays English. */
 export const restoreLang = () => {
-    if (storage.get(LANG_STORAGE_KEY) === "th") setLang("th");
+    const saved = storage.get(LANG_STORAGE_KEY);
+    if (saved && saved !== locale.lang && Object.hasOwn(dict, saved)) setLang(saved as Lang);
 };
