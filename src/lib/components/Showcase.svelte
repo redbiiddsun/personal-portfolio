@@ -25,6 +25,9 @@
   const INTRO_EXIT_RATIO = 0.7;
 
   let section: HTMLElement;
+  /** Scrolls sideways on mobile, where the list is a row of chips. */
+  let listScroller: HTMLElement;
+  const listButtons: HTMLButtonElement[] = [];
   let activeIndex = $state(0);
   let shownIndex = $state(0);
   let isIntro = $state(true);
@@ -43,9 +46,19 @@
     return { top, total, introEnd, perProject: (total - introEnd) / projects.length };
   };
 
+  /** Keep the active chip in view on mobile; a no-op on desktop, where the list doesn't scroll. */
+  const revealChip = (index: number) => {
+    const chip = listButtons[index];
+    listScroller.scrollTo({
+      left: chip.offsetLeft - (listScroller.clientWidth - chip.offsetWidth) / 2,
+      behavior: prefersReducedMotion() ? 'auto' : 'smooth',
+    });
+  };
+
   const activate = (index: number) => {
     if (index === activeIndex) return;
     activeIndex = index;
+    revealChip(index);
     clearTimeout(swapTimer);
     isSwapping = true;
     swapTimer = setTimeout(() => {
@@ -100,7 +113,7 @@
   <div
     class="sticky top-0 mx-auto grid h-screen max-w-[1340px] grid-cols-[280px_minmax(0,1fr)] items-center gap-6 px-6 pt-24 pb-6 max-[900px]:grid-cols-1 max-[900px]:grid-rows-[auto_1fr] max-[900px]:items-stretch max-[900px]:gap-3 max-[900px]:px-4 max-[900px]:pt-[84px] max-[900px]:pb-4"
   >
-    <div class="relative flex h-full items-center max-[900px]:h-auto max-[900px]:overflow-x-auto max-[900px]:[scrollbar-width:none]">
+    <div class="relative flex h-full items-center max-[900px]:h-auto max-[900px]:overflow-x-auto max-[900px]:[scrollbar-width:none]" bind:this={listScroller}>
       <nav
         class={[
           'grid transition-[transform,opacity,translate] duration-[.7s,.6s,.7s] ease-smooth max-[900px]:grid-flow-col max-[900px]:gap-2 max-[900px]:transform-none!',
@@ -111,6 +124,7 @@
         style:--item-h="{LIST_BUTTON_HEIGHT_PX}px">
         {#each projects as project, index (project.id)}
           <button
+            bind:this={listButtons[index]}
             class={[
               'h-(--item-h) origin-left pl-1 text-left text-[25px] whitespace-nowrap transition-[scale,color,opacity] duration-500 ease-smooth max-[900px]:h-[38px] max-[900px]:rounded-full max-[900px]:px-3.5 max-[900px]:text-sm',
               index === activeIndex
