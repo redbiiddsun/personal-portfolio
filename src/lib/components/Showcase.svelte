@@ -94,14 +94,25 @@
   });
 </script>
 
-<section class="showcase" class:is-intro={isIntro} id="showcase" data-theme="light" bind:this={section}>
-  <div class="sc-sticky">
-    <div class="sc-left">
-      <nav class="sc-roles" aria-label="Projects" style:transform="translateY({listOffset}px)">
+<section class="relative h-[calc(100vh*7.2)]" id="showcase" data-theme="light" bind:this={section}>
+  <div
+    class="sticky top-0 mx-auto grid h-screen max-w-[1340px] grid-cols-[280px_minmax(0,1fr)] items-center gap-6 px-6 pt-24 pb-6 max-[900px]:grid-cols-1 max-[900px]:grid-rows-[auto_1fr] max-[900px]:items-stretch max-[900px]:gap-3 max-[900px]:px-4 max-[900px]:pt-[84px] max-[900px]:pb-4"
+  >
+    <div class="relative flex h-full items-center max-[900px]:h-auto max-[900px]:overflow-x-auto max-[900px]:[scrollbar-width:none]">
+      <nav
+        class={[
+          'grid transition-[transform,opacity,translate] duration-[.7s,.6s,.7s] ease-smooth max-[900px]:grid-flow-col max-[900px]:gap-2 max-[900px]:transform-none!',
+          isIntro && '-translate-x-[30px] opacity-0',
+        ]}
+        aria-label="Projects" style:transform="translateY({listOffset}px)">
         {#each projects as project, index (project.id)}
           <button
-            class="sc-role"
-            class:active={index === activeIndex}
+            class={[
+              'h-14 origin-left pl-1 text-left text-[25px] whitespace-nowrap transition-[scale,color,opacity] duration-500 ease-smooth max-[900px]:h-[38px] max-[900px]:rounded-full max-[900px]:px-3.5 max-[900px]:text-sm',
+              index === activeIndex
+                ? 'scale-132 font-medium text-ink max-[900px]:scale-100 max-[900px]:bg-ink max-[900px]:text-white'
+                : 'text-ink-3 hover:text-ink-2 max-[900px]:bg-soft',
+            ]}
             style:opacity={Math.max(MIN_LIST_OPACITY, 1 - Math.abs(index - activeIndex) * LIST_OPACITY_FALLOFF)}
             onclick={() => scrollToProject(index)}
           >
@@ -110,8 +121,15 @@
         {/each}
       </nav>
     </div>
-    <article class="sc-card">
-      <div class="sc-inner" class:swap={isSwapping}>
+    <article
+      class={[
+        'relative h-[min(80vh,760px)] overflow-hidden rounded-[28px] bg-white px-[30px] pt-[30px] shadow-[0_0_0_9px_#f1f2f4,0_20px_60px_rgba(20,24,33,.08)] transition-[translate] duration-800 ease-smooth [mask-image:linear-gradient(#000_85%,transparent)] max-[900px]:h-auto max-[900px]:px-[18px] max-[900px]:pt-5',
+        isIntro && '-translate-x-[152px] max-[900px]:translate-x-0',
+      ]}
+    >
+      <div
+        class={['transition-[opacity,translate] duration-[.25s,.35s] ease-smooth', isSwapping && 'translate-y-2.5 opacity-0']}
+      >
         <ProjectCard project={projects[shownIndex]} bind:tab />
       </div>
     </article>
