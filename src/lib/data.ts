@@ -205,24 +205,26 @@ export const productionProject = projectById('my-isuzu');
 
 type ShotLayout = Omit<HeroImageShot, 'src' | 'logo' | 'title'>;
 
-/** A hero card showing a project screenshot; title and logo come from the project itself. */
-const projectShot = (projectId: string, file: string, layout: ShotLayout): HeroImageShot => {
+/** A hero card showing a project's cover (first gallery image); title and logo come from the project too. */
+const projectShot = (projectId: string, layout: ShotLayout): HeroImageShot => {
   const project = projectById(projectId);
-  return { ...layout, src: shot(projectId, file), logo: project.logo, title: project.name };
+  const [cover] = project.gallery;
+  if (!cover) throw new Error(`Project "${projectId}" has no cover image`);
+  return { ...layout, src: cover, logo: project.logo, title: project.name };
 };
 
 // Image cards are screenshots of the projects above; `art` cards are drawn in HTML (DevArt.svelte).
 export const heroShots: HeroShot[] = [
-  projectShot('engineeringscore', 'home.webp', { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, caption: 'SvelteKit · SaaS' }),
+  projectShot('engineeringscore', { side: 'left', offsetX: -1, offsetY: 9, width: 180, height: 190, rotation: -5, depth: 0.6, caption: 'SvelteKit · SaaS' }),
   { side: 'left', offsetX: 8, offsetY: -5, width: 150, height: 120, rotation: 3, depth: 0.3, art: 'terminal', tech: 'Svelte', title: 'build.log', caption: 'Svelte · build', isDesktopOnly: true },
-  projectShot('my-isuzu', 'screen-3.webp', { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, caption: { en: 'Mobile app', th: 'แอปมือถือ' }, isDesktopOnly: true }),
+  projectShot('my-isuzu', { side: 'left', offsetX: 14, offsetY: 27, width: 150, height: 180, rotation: 2, depth: 0.9, caption: { en: 'Mobile app', th: 'แอปมือถือ' }, isDesktopOnly: true }),
   { side: 'left', offsetX: -1.5, offsetY: 45, width: 200, height: 160, rotation: -3, depth: 0.5, art: 'code', tech: 'NestJS', title: 'orders.controller.ts', caption: 'NestJS', isDesktopOnly: true },
-  projectShot('pakprik', 'product.webp', { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, caption: { en: 'E-commerce', th: 'ร้านค้าออนไลน์' } }),
-  projectShot('willow-court', 'home.webp', { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, caption: { en: 'Demo site', th: 'เว็บตัวอย่าง' }, isDesktopOnly: true }),
-  projectShot('sigmalearn', 'past-papers.webp', { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, caption: 'Next.js · EdTech' }),
+  projectShot('pakprik', { side: 'left', offsetX: 4, offsetY: 68, width: 190, height: 230, rotation: 3, depth: 1, caption: { en: 'E-commerce', th: 'ร้านค้าออนไลน์' } }),
+  projectShot('willow-court', { side: 'right', offsetX: 12, offsetY: -7, width: 150, height: 110, rotation: -3, depth: 0.4, caption: { en: 'Demo site', th: 'เว็บตัวอย่าง' }, isDesktopOnly: true }),
+  projectShot('sigmalearn', { side: 'right', offsetX: 0, offsetY: 5, width: 160, height: 180, rotation: 4, depth: 0.7, caption: 'Next.js · EdTech' }),
   { side: 'right', offsetX: -1, offsetY: 34, width: 200, height: 230, rotation: -2, depth: 0.9, art: 'schema', tech: 'PostgreSQL', title: 'schema.sql', caption: 'PostgreSQL', isDesktopOnly: true },
   { side: 'right', offsetX: 13, offsetY: 76, width: 150, height: 190, rotation: -2, depth: 0.5, art: 'api', tech: 'TypeScript', title: 'GET /orders/1042', caption: 'TypeScript API', isDesktopOnly: true },
-  projectShot('portfolio', 'home.webp', { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, caption: 'SvelteKit · 2026' }),
+  projectShot('portfolio', { side: 'right', offsetX: -1, offsetY: 71, width: 180, height: 140, rotation: 3, depth: 0.8, caption: 'SvelteKit · 2026' }),
 ];
 
 /** Hero tech stack, in display order. */
