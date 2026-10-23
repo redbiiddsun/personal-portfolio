@@ -3,9 +3,9 @@
 <head>
   <!-- Charset first: browsers only look for it in the first 1024 bytes. -->
   <meta charset="UTF-8" />
-  <!-- Google tag (gtag.js) -->
+  <!-- Google tag (gtag.js) and Microsoft Clarity -->
   <!-- Runs only on the production host; keep the hostname in sync with SITE_URL in src/lib/data.ts. -->
-  <!-- Consent Mode v2: analytics cookies stay off until the visitor accepts in CookieConsent.svelte (storage key "consent", see src/lib/consent.svelte.ts). -->
+  <!-- Analytics cookies stay off until the visitor accepts in CookieConsent.svelte (storage key "consent", see src/lib/consent.svelte.ts); the choice goes to Google Consent Mode v2 and Clarity's Consent API v2 (consentv2). -->
   <script>
     (function () {
       if (location.hostname !== 'redbiiddsun.com') return;
@@ -23,6 +23,13 @@
       gtag('js', new Date());
 
       gtag('config', 'G-BB9H2QXLCQ');
+
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, "clarity", "script", "z2d1cdsh94");
+      clarity('consentv2', { ad_Storage: 'denied', analytics_Storage: hasConsent ? 'granted' : 'denied' });
     })();
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />

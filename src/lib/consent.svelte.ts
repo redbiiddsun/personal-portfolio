@@ -1,14 +1,14 @@
 import type { Consent } from "./types";
 import { storage } from "./utils";
 
-/** Read by the Google tag in app.html before it loads; keep both in sync. */
+/** Read by the Google tag and Clarity in app.html before they load; keep both in sync. */
 const CONSENT_STORAGE_KEY = "consent";
 
-/** Every Google Analytics cookie name starts with this. */
-const GA_COOKIE_PREFIX = "_ga";
+/** Cookie name prefixes set by Google Analytics (`_ga…`) and Microsoft Clarity (`_clck`, `_clsk`). */
+const ANALYTICS_COOKIE_PREFIXES = ["_ga", "_clck", "_clsk"];
 
-/** GA sets its cookies on the root domain; must match SITE_URL in src/lib/data.ts. */
-const GA_COOKIE_DOMAIN = ".redbiiddsun.com";
+/** Both tools set their cookies on the root domain; must match SITE_URL in src/lib/data.ts. */
+const ANALYTICS_COOKIE_DOMAIN = ".redbiiddsun.com";
 
 export const consentBanner = $state({ isOpen: false });
 
@@ -31,14 +31,14 @@ export const focusOnReopen = (button: HTMLElement) => {
     if (opener) button.focus();
 };
 
-/** Withdrawing consent must also drop the cookies GA already set, not just stop new ones. */
+/** Withdrawing consent must also drop the cookies already set, not just stop new ones. */
 const removeAnalyticsCookies = () => {
     const names = document.cookie
         .split(";")
         .map((cookie) => cookie.split("=")[0].trim())
-        .filter((name) => name.startsWith(GA_COOKIE_PREFIX));
+        .filter((name) => ANALYTICS_COOKIE_PREFIXES.some((prefix) => name.startsWith(prefix)));
     for (const name of names) {
-        document.cookie = `${name}=; domain=${GA_COOKIE_DOMAIN}; path=/; max-age=0`;
+        document.cookie = `${name}=; domain=${ANALYTICS_COOKIE_DOMAIN}; path=/; max-age=0`;
         document.cookie = `${name}=; path=/; max-age=0`;
     }
 };
@@ -46,6 +46,7 @@ const removeAnalyticsCookies = () => {
 export const setConsent = (consent: Consent) => {
     storage.set(CONSENT_STORAGE_KEY, consent);
     window.gtag?.("consent", "update", { analytics_storage: consent });
+    window.clarity?.("consentv2", { ad_Storage: "denied", analytics_Storage: consent });
     if (consent === "denied") removeAnalyticsCookies();
     consentBanner.isOpen = false;
     opener?.focus();
