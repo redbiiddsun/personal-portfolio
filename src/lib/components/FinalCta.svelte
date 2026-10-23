@@ -24,22 +24,39 @@
   };
 </script>
 
-<section class="final" data-theme="dark">
+<section class="px-4 pt-40 pb-[140px] text-center text-on-dark" data-theme="dark">
   <h2 class="h2" use:reveal>
-    {t('final.title')} <span class="scribble-wrap"><span>{t('final.titleMark')}</span>
-      <svg class="scribble" viewBox="0 0 120 14" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9c22-4 52-6 114-3" /></svg></span>
+    {t('final.title')} <span class="relative inline-block"><span>{t('final.titleMark')}</span>
+      <svg
+        class="scribble absolute -bottom-[.22em] left-0 h-[.3em] w-full fill-none stroke-blue stroke-3"
+        stroke-linecap="round"
+        viewBox="0 0 120 14"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      ><path d="M3 9c22-4 52-6 114-3" /></svg></span>
   </h2>
-  <p class="lead">{t('final.sub')}</p>
-  <div class="final-cta" use:reveal>
+  <p class="lead mb-[38px] text-on-dark-2">{t('final.sub')}</p>
+  <div class="relative inline-block" use:reveal>
     <ContactButton variant="light" isLarge />
-    <span class="final-note" aria-hidden="true">
-      <svg viewBox="0 0 60 40"><path class="draw" d="M56 8C40 4 20 10 10 30" /><path class="draw" d="m4 22 6 9 9-5" /></svg>
+    <span
+      class="absolute -top-[34px] left-[calc(100%+12px)] flex -rotate-4 items-start gap-1 font-script text-[26px] leading-none whitespace-nowrap text-on-dark opacity-0 transition-opacity delay-1000 duration-500 ease-smooth in-[.is-in]:opacity-100 max-md:hidden"
+      aria-hidden="true"
+    >
+      <svg
+        class="mt-3.5 h-8 w-12 fill-none stroke-current stroke-2 *:[stroke-dasharray:80] *:[stroke-dashoffset:80] *:transition-[stroke-dashoffset] *:delay-1200 *:duration-800 *:ease-smooth in-[.is-in]:*:[stroke-dashoffset:0]"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        viewBox="0 0 60 40"><path d="M56 8C40 4 20 10 10 30" /><path d="m4 22 6 9 9-5" /></svg
+      >
       {t('final.note')}
     </span>
   </div>
-  <button class="final-copy" type="button" onclick={copyEmail}>
-    {t('final.or')} <u>{OWNER.email}</u>
+  <button class="group mx-auto mt-[22px] block px-2 py-1 text-[15px] text-on-dark-2" type="button" onclick={copyEmail}>
+    {t('final.or')} <u class="decoration-white/30 underline-offset-3 transition-colors duration-200 group-hover:text-on-dark group-hover:decoration-current">{OWNER.email}</u>
   </button>
   <span class="sr-only" aria-live="polite">{isCopied ? t('final.copied') : ''}</span>
-  <span class="final-toast" class:on={isCopied} aria-hidden="true">{t('final.copied')} ✓</span>
+  <span
+    class={['mt-1.5 block h-[22px] font-script text-[22px] text-blue transition-opacity duration-300', isCopied ? 'opacity-100' : 'opacity-0']}
+    aria-hidden="true"
+  >{t('final.copied')} ✓</span>
 </section>
