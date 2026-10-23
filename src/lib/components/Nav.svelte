@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { onScrollFrame } from '#lib/utils.ts';
   import ContactButton from './ContactButton.svelte';
+  import { HERO_CTA_ID } from './Hero.svelte';
   import LangSwitch from './LangSwitch.svelte';
   import Logo from './Logo.svelte';
 
@@ -16,7 +17,7 @@
 
   onMount(() => {
     const themedSections = [...document.querySelectorAll<HTMLElement>('main [data-theme]')];
-    const heroCta = document.getElementById('heroCta');
+    const heroCta = document.getElementById(HERO_CTA_ID);
     return onScrollFrame(() => {
       isAtTop = scrollY < AT_TOP_PX;
       isCtaShown = (heroCta?.getBoundingClientRect().bottom ?? 0) < CTA_SHOW_PX;

@@ -1,8 +1,15 @@
+<script lang="ts" module>
+  /** The hero's call to action; the nav shows its own once this scrolls away. */
+  export const HERO_CTA_ID = 'heroCta';
+</script>
+
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { heroShots, techStack } from '#lib/data.ts';
-  import { t } from '#lib/i18n.svelte.ts';
+  import { heroShots } from '#lib/data.ts';
+  import { localize, t } from '#lib/i18n.svelte.ts';
+  import { techIcons } from '#lib/tech-icons.ts';
   import { prefersReducedMotion } from '#lib/utils.ts';
+  import BrandIcon from './BrandIcon.svelte';
   import DevArt from './DevArt.svelte';
   import RotatingWord from './RotatingWord.svelte';
   import TechStack from './TechStack.svelte';
@@ -29,7 +36,7 @@
 
   /* Mouse + scroll parallax and a slow idle bob on the collage, only while the hero is visible. */
   onMount(() => {
-    const reduceMotion = prefersReducedMotion();
+    if (prefersReducedMotion()) return;
     let targetX = 0;
     let targetY = 0;
     let pointerX = 0;
@@ -46,7 +53,7 @@
       parallaxLayers.forEach((layer, index) => {
         const { depth, side } = heroShots[index];
         const direction = side === 'left' ? -1 : 1;
-        const bob = reduceMotion ? 0 : Math.sin(time / BOB_PERIOD_MS + index * BOB_PHASE_STEP) * BOB_PX * depth;
+        const bob = Math.sin(time / BOB_PERIOD_MS + index * BOB_PHASE_STEP) * BOB_PX * depth;
         const x = -pointerX * depth * POINTER_SHIFT_PX + direction * scrollY * depth * SCROLL_SHIFT_X;
         const y = -pointerY * depth * POINTER_SHIFT_PX - scrollY * depth * SCROLL_SHIFT_Y + bob;
         layer.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0)`;
@@ -91,12 +98,9 @@
               {#if 'src' in card}
                 <span class="relative flex-none"><img class="size-[26px] rounded-full object-cover" src={card.logo} alt="" /><i class="absolute -right-px -bottom-px size-[9px] rounded-full border-2 border-white bg-[#22a447]"></i></span>
               {:else}
-                {@const tech = techStack.find((logo) => logo.name === card.tech)}
-                {#if tech}
-                  <span class="flex-none"><svg class="size-[26px] rounded-full bg-soft p-1" viewBox="0 0 24 24" fill={tech.color} aria-hidden="true"><path d={tech.path} /></svg></span>
-                {/if}
+                <span class="flex-none"><BrandIcon icon={techIcons[card.tech]} class="size-[26px] rounded-full bg-soft p-1" /></span>
               {/if}
-              <span class="min-w-0"><b class="block truncate text-[11.5px] font-semibold">{card.title}</b><small class="block truncate text-[9.5px] text-ink-3">{card.caption}</small></span>
+              <span class="min-w-0"><b class="block truncate text-[11.5px] font-semibold">{card.title}</b><small class="block truncate text-[9.5px] text-ink-3">{localize(card.caption)}</small></span>
             </div>
           </div>
         </div>
@@ -114,7 +118,7 @@
     </h1>
     <p class="mb-[30px] text-[clamp(15px,1.3vw,17px)] text-ink-2">{t('hero.sub')}</p>
     <TechStack />
-    <ContactButton isLarge id="heroCta" />
+    <ContactButton isLarge id={HERO_CTA_ID} />
   </div>
   <a class="absolute bottom-[26px] left-1/2 z-2 grid -translate-x-1/2 justify-items-center gap-1 text-sm text-ink-3 no-underline" href="#people">
     <span>{t('scroll')}</span>

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { rotatingWords } from '#lib/data.ts';
+  import { localize } from '#lib/i18n.svelte.ts';
   import { afterNextPaint, prefersReducedMotion } from '#lib/utils.ts';
 
   const ROTATE_EVERY_MS = 2400;
@@ -21,7 +22,7 @@
         const leaving = slot.querySelector('.word:not(.out)')!;
         const entering = document.createElement('span');
         entering.className = 'word in';
-        entering.textContent = rotatingWords[wordIndex];
+        entering.textContent = localize(rotatingWords[wordIndex]);
         slot.appendChild(entering);
         slot.style.width = `${entering.offsetWidth}px`;
         leaving.classList.add('out');
@@ -34,6 +35,6 @@
 </script>
 
 <span
-  class="relative inline-block h-[1.15em] align-top transition-[width] duration-650 ease-[cubic-bezier(.6,0,.2,1)]"
+  class="relative inline-block h-[1.15em] align-top transition-[width] duration-650 ease-swap"
   bind:this={slot}
-><span class="word">{rotatingWords[0]}</span></span>
+><span class="word">{localize(rotatingWords[0])}</span></span>
