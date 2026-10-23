@@ -10,7 +10,7 @@ export const OWNER = {
 };
 
 /** Public origin, no trailing slash; used for canonical, Open Graph and the sitemap. */
-export const SITE_URL = 'https://personal-portfolio-one-phi-57.vercel.app';
+export const SITE_URL = 'https://redbiiddsun.com';
 /** SEO copy stays English: the prerendered HTML is English, Thai is applied on the client. */
 export const SITE_DESCRIPTION = `${OWNER.name} (${OWNER.nickname}), a full-stack developer building web apps, APIs and mobile apps end to end.`;
 export const OG_IMAGE = { src: '/og.jpg', width: 1200, height: 630, alt: 'portfolio hero' };
