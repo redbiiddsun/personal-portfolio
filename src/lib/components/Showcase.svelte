@@ -3,16 +3,22 @@
   import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import { projects } from '#lib/data.ts';
+  import { localize, t } from '#lib/i18n.svelte.ts';
   import type { ProjectTab } from '#lib/types.ts';
   import { onScrollFrame, prefersReducedMotion } from '#lib/utils.ts';
   import ProjectCard from './ProjectCard.svelte';
 
   const LIST_BUTTON_HEIGHT_PX = 56;
-  const SWAP_MS = 220;
+  /** Content fade-out length; the next project swaps in once it ends. */
+  const SWAP_MS = 250;
   const MIN_LIST_OPACITY = 0.35;
   const LIST_OPACITY_FALLOFF = 0.18;
   /** Fraction of the viewport scrolled before the first project starts. */
   const INTRO_VIEWPORT_RATIO = 0.5;
+  /** Scroll distance per project, in viewport heights. */
+  const VIEWPORTS_PER_PROJECT = 0.95;
+  /** Intro scroll + every project + the final pinned viewport. */
+  const SECTION_VIEWPORTS = INTRO_VIEWPORT_RATIO + projects.length * VIEWPORTS_PER_PROJECT + 1;
   /** Nudge past a project's start so a click lands inside it, not on the boundary. */
   const SCROLL_NUDGE_PX = 4;
   const WARM_IMAGES_DELAY_MS = 1200;
@@ -94,7 +100,7 @@
   });
 </script>
 
-<section class="relative h-[calc(100vh*7.2)]" id="showcase" data-theme="light" bind:this={section}>
+<section class="relative" style:height="calc(100vh * {SECTION_VIEWPORTS})" id="showcase" data-theme="light" bind:this={section}>
   <div
     class="sticky top-0 mx-auto grid h-screen max-w-[1340px] grid-cols-[280px_minmax(0,1fr)] items-center gap-6 px-6 pt-24 pb-6 max-[900px]:grid-cols-1 max-[900px]:grid-rows-[auto_1fr] max-[900px]:items-stretch max-[900px]:gap-3 max-[900px]:px-4 max-[900px]:pt-[84px] max-[900px]:pb-4"
   >
@@ -104,11 +110,13 @@
           'grid transition-[transform,opacity,translate] duration-[.7s,.6s,.7s] ease-smooth max-[900px]:grid-flow-col max-[900px]:gap-2 max-[900px]:transform-none!',
           isIntro && '-translate-x-[30px] opacity-0',
         ]}
-        aria-label="Projects" style:transform="translateY({listOffset}px)">
+        aria-label={t('a11y.projects')}
+        style:transform="translateY({listOffset}px)"
+        style:--item-h="{LIST_BUTTON_HEIGHT_PX}px">
         {#each projects as project, index (project.id)}
           <button
             class={[
-              'h-14 origin-left pl-1 text-left text-[25px] whitespace-nowrap transition-[scale,color,opacity] duration-500 ease-smooth max-[900px]:h-[38px] max-[900px]:rounded-full max-[900px]:px-3.5 max-[900px]:text-sm',
+              'h-(--item-h) origin-left pl-1 text-left text-[25px] whitespace-nowrap transition-[scale,color,opacity] duration-500 ease-smooth max-[900px]:h-[38px] max-[900px]:rounded-full max-[900px]:px-3.5 max-[900px]:text-sm',
               index === activeIndex
                 ? 'scale-132 font-medium text-ink max-[900px]:scale-100 max-[900px]:bg-ink max-[900px]:text-white'
                 : 'text-ink-3 hover:text-ink-2 max-[900px]:bg-soft',
@@ -116,7 +124,7 @@
             style:opacity={Math.max(MIN_LIST_OPACITY, 1 - Math.abs(index - activeIndex) * LIST_OPACITY_FALLOFF)}
             onclick={() => scrollToProject(index)}
           >
-            {project.label}
+            {localize(project.label)}
           </button>
         {/each}
       </nav>
@@ -128,7 +136,8 @@
       ]}
     >
       <div
-        class={['transition-[opacity,translate] duration-[.25s,.35s] ease-smooth', isSwapping && 'translate-y-2.5 opacity-0']}
+        class={['transition-[opacity,translate] duration-[var(--swap),.35s] ease-smooth', isSwapping && 'translate-y-2.5 opacity-0']}
+        style:--swap="{SWAP_MS}ms"
       >
         <ProjectCard project={projects[shownIndex]} bind:tab />
       </div>
