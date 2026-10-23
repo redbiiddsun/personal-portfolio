@@ -11,11 +11,25 @@
   --color-dark: #141821;
   --color-on-dark: #eef0f3;
   --color-on-dark-2: #8e97a6;
+  --color-on-dark-3: #454c5a;
   --color-blue: #3b7cf0;
-  --font-sans: "Google Sans Flex", "Google Sans", "Plus Jakarta Sans", "Noto Sans Thai", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
+  --color-blue-pale: #b8d4ff;
+  /* Ink on the pastel sticky notes and the dark tile behind light brand marks. */
+  --color-note-ink: #23262d;
+  --color-ink-mute: #8b8f96;
+  --color-ok: #1e6b34;
+  --color-ok-bg: #dcf5e3;
+  --color-warn: #8a5a00;
+  --color-warn-bg: #fff1d6;
+  /* Loaded in app.html; Noto Sans Thai covers Thai glyphs. */
+  --font-sans: "Google Sans Flex", "Plus Jakarta Sans", "Noto Sans Thai", -apple-system, system-ui, "Segoe UI", Roboto, sans-serif;
   --font-hand: "Itim", "Caveat", cursive;
   --font-script: "Caveat", "Itim", cursive;
   --ease-smooth: cubic-bezier(.22, 1, .36, 1);
+  /* Slower start, for the rotating hero word's width swap. */
+  --ease-swap: cubic-bezier(.6, 0, .2, 1);
+  /* Rounded bottom of the stacked paper panels; both panels must match. */
+  --radius-panel: 44px;
 
   --animate-bob: bob 1.6s ease-in-out infinite;
   --animate-blink: blink 1s steps(1) infinite;
@@ -44,7 +58,7 @@
   :focus-visible { outline: 2px solid var(--color-blue); outline-offset: 3px; }
 
   @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; animation-delay: 0s !important; transition-delay: 0s !important; scroll-behavior: auto !important; }
   }
 }
 
@@ -86,17 +100,19 @@
 
   /* ---------- experience sticky notes ---------- */
   .xp-note {
-    opacity: 0; transform: translateY(-90px) rotate(calc(var(--r) * 3)) scale(1.08);
+    --xp-start: translateY(-90px) rotate(calc(var(--r) * 3)) scale(1.08);
+    --xp-rest: rotate(var(--r));
+    opacity: 0; transform: var(--xp-start);
     box-shadow: 0 18px 30px rgba(0, 0, 0, .28);
     transition: transform .35s var(--ease-smooth), box-shadow .3s;
   }
   /* Drop-in: notes start high, over-rotated and slightly enlarged, then settle at their tilt. */
   @keyframes xp-drop {
-    from { opacity: 0; transform: translateY(-90px) rotate(calc(var(--r) * 3)) scale(1.08); }
-    to { opacity: 1; transform: rotate(var(--r)); }
+    from { opacity: 0; transform: var(--xp-start); }
+    to { opacity: 1; transform: var(--xp-rest); }
   }
   /* Fill `backwards` only: once the drop-in ends, the resting transform below takes over so hover can still transition. */
-  .is-in > .xp-note { opacity: 1; transform: rotate(var(--r)); animation: xp-drop .9s var(--ease-smooth) calc(var(--i) * 90ms) backwards; }
+  .is-in > .xp-note { opacity: 1; transform: var(--xp-rest); animation: xp-drop .9s var(--ease-smooth) calc(var(--i) * 90ms) backwards; }
   .is-in > .xp-note:hover { transform: rotate(0) translateY(-6px); box-shadow: 0 28px 44px rgba(0, 0, 0, .36); }
   .xp-note::before { content: ""; position: absolute; inset: 0; background: var(--grain); opacity: .18; mix-blend-mode: multiply; pointer-events: none; }
   /* Strip of tape pinning the note to the board. */
@@ -108,7 +124,7 @@
 
   /* Blue highlight that sweeps across the text once its row is revealed. */
   .shine {
-    background: linear-gradient(90deg, #3b7cf0 0%, #3b7cf0 40%, #b8d4ff 50%, var(--color-ink) 60%, var(--color-ink) 100%);
+    background: linear-gradient(90deg, var(--color-blue) 0%, var(--color-blue) 40%, var(--color-blue-pale) 50%, var(--color-ink) 60%, var(--color-ink) 100%);
     background-size: 260% 100%; background-position: 100% 0;
     -webkit-background-clip: text; background-clip: text; color: transparent;
     transition: background-position 1.8s var(--ease-smooth) .3s;
@@ -117,7 +133,7 @@
 
   /* ---------- features ---------- */
   .in-view .sweep span { animation: sweep 2s var(--ease-smooth) both; animation-delay: calc(var(--i) * 70ms + .2s); }
-  @keyframes sweep { 0% { color: #454c5a; } 30%, 55% { color: var(--c); } 100% { color: #fff; } }
+  @keyframes sweep { 0% { color: var(--color-on-dark-3); } 30%, 55% { color: var(--c); } 100% { color: white; } }
 
   .f-card::after { content: ""; position: absolute; inset: 0; background: var(--grain); opacity: .35; mix-blend-mode: overlay; pointer-events: none; z-index: 5; }
   .grad-1 { background: radial-gradient(120% 90% at 10% 0%, #fde3a7 0%, transparent 55%), radial-gradient(100% 100% at 90% 100%, #9fd2d8 0%, transparent 60%), #cfe5e3; }
