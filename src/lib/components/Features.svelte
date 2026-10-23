@@ -1,13 +1,13 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { inView, reveal } from '#lib/actions.ts';
-  import { projects, skills, socials } from '#lib/data.ts';
-  import { t } from '#lib/i18n.svelte.ts';
-  import { techIconFor } from '#lib/tech-icons.ts';
+  import { projects, searchQueries, skills, socials } from '#lib/data.ts';
+  import { localize, t } from '#lib/i18n.svelte.ts';
+  import { techIcons } from '#lib/tech-icons.ts';
   import { prefersReducedMotion, wait } from '#lib/utils.ts';
+  import BrandIcon from './BrandIcon.svelte';
   import Sweep from './Sweep.svelte';
 
-  const SEARCH_QUERIES = ['realtime dashboard', 'stripe checkout', 'AI chatbot', 'REST API', 'booking app'];
   const TYPE_DELAY_MS = 70;
   const ERASE_DELAY_MS = 30;
   const HOLD_MS = 1600;
@@ -27,24 +27,26 @@
   const HEADING_CLASS = 'pl-12 text-[clamp(28px,2.9vw,40px)] leading-[1.2] font-normal tracking-[-.01em] max-[1100px]:pl-0';
   const DIM_CLASS = 'text-[#c9ced6]';
 
-  let searchText = $state('');
+  /** Typed text; until typing starts (no JS, reduced motion) the first query shows as-is. */
+  let typedText = $state<string>();
+  const searchText = $derived(typedText ?? localize(searchQueries[0]));
 
   /* The search box types through a few queries. */
   onMount(() => {
-    if (prefersReducedMotion()) {
-      searchText = SEARCH_QUERIES[0];
-      return;
-    }
+    if (prefersReducedMotion()) return;
     let isMounted = true;
+    typedText = '';
     (async () => {
-      for (let queryIndex = 0; isMounted; queryIndex = (queryIndex + 1) % SEARCH_QUERIES.length) {
-        for (const character of SEARCH_QUERIES[queryIndex]) {
-          searchText += character;
+      for (let queryIndex = 0; isMounted; queryIndex = (queryIndex + 1) % searchQueries.length) {
+        // Read lazily so a language restored after mount applies mid-query.
+        const query = () => localize(searchQueries[queryIndex]);
+        while (isMounted && typedText.length < query().length) {
+          typedText = query().slice(0, typedText.length + 1);
           await wait(TYPE_DELAY_MS);
         }
         await wait(HOLD_MS);
-        while (searchText) {
-          searchText = searchText.slice(0, -1);
+        while (typedText) {
+          typedText = typedText.slice(0, -1);
           await wait(ERASE_DELAY_MS);
         }
         await wait(NEXT_QUERY_PAUSE_MS);
@@ -64,13 +66,13 @@
         {#each stackRows as row, rowIndex (rowIndex)}
           <div class={['flex w-max animate-marquee group-hover:[animation-play-state:paused]', rowIndex % 2 && '[animation-direction:reverse]']}>
             {#each row as tech, index (index)}
-              {@const icon = techIconFor(tech)}
+              {@const icon = techIcons[tech]}
               <div
                 class="mr-3.5 flex size-28 flex-none flex-col items-center justify-center gap-2.5 rounded-2xl bg-white p-2 text-center text-[13px] font-semibold text-ink shadow-[0_10px_28px_rgba(20,24,33,.12)]"
                 aria-hidden={index >= row.length / 2}>
-                {#if icon}<span
-                    class="grid size-12 place-items-center rounded-xl bg-[var(--tile,#fff)] shadow-[0_1px_2px_rgba(35,38,45,.12)]"
-                    style:--tile={icon.tile}><svg class="size-7" viewBox="0 0 24 24" fill={icon.color} aria-hidden="true"><path d={icon.path} /></svg></span>{/if}
+                <span
+                  class="grid size-12 place-items-center rounded-xl bg-[var(--tile,#fff)] shadow-[0_1px_2px_rgba(35,38,45,.12)]"
+                  style:--tile={icon.tile}><BrandIcon {icon} class="size-7" /></span>
                 {tech}
               </div>
             {/each}
@@ -92,7 +94,7 @@
           {#each marqueeResults as result, index (index)}
             <div class="grid grid-cols-[92px_1fr] items-center gap-3.5 rounded-2xl bg-white p-2.5 text-ink">
               <img class="h-[72px] w-[92px] rounded-[10px] object-cover" src={result.src} alt="" loading="lazy" />
-              <div><b class="block text-[15px] font-medium">{result.title}</b><small class="my-[3px] block text-[12.5px] text-ink-2">{result.projectName}{#if result.isDemo} · Demo{/if}</small><div class="text-[12.5px]">{result.detail}</div></div>
+              <div><b class="block text-[15px] font-medium">{localize(result.title)}</b><small class="my-[3px] block text-[12.5px] text-ink-2">{result.projectName}{#if result.isDemo} · {t('badge.demo')}{/if}</small><div class="text-[12.5px]">{localize(result.detail)}</div></div>
             </div>
           {/each}
         </div>
@@ -111,8 +113,8 @@
               class="group/social flex translate-y-4 items-center gap-3.5 rounded-[18px] bg-white px-[18px] py-3.5 text-ink no-underline opacity-0 shadow-[0_10px_28px_rgba(20,24,33,.12)] transition-[opacity,translate,box-shadow] duration-[.6s,.6s,.2s] ease-smooth hover:shadow-[0_16px_36px_rgba(20,24,33,.2)] focus-visible:outline-ink in-[.in-view]:translate-y-0 in-[.in-view]:opacity-100 in-[.in-view]:delay-[calc(var(--i)*120ms)]"
               style:--i={index}
               href={social.url} target={social.isExternal ? '_blank' : undefined} rel={social.isExternal ? 'noreferrer' : undefined}>
-              <span class="grid size-12 flex-none place-items-center rounded-xl bg-soft"><svg class="size-[26px]" viewBox="0 0 24 24" fill={social.icon.color} aria-hidden="true"><path d={social.icon.path} /></svg></span>
-              <span class="min-w-0 flex-1"><b class="block text-base font-semibold">{social.label}</b><small class="block truncate text-[13px] text-ink-2">{social.handle}</small></span>
+              <span class="grid size-12 flex-none place-items-center rounded-xl bg-soft"><BrandIcon icon={social.icon} class="size-[26px]" /></span>
+              <span class="min-w-0 flex-1"><b class="block text-base font-semibold">{localize(social.label)}</b><small class="block truncate text-[13px] text-ink-2">{social.handle}</small></span>
               {#if social.isExternal}<span class="text-lg text-ink-2 transition-[translate] duration-200 group-hover/social:translate-x-0.5 group-hover/social:-translate-y-0.5" aria-hidden="true">↗</span><span class="sr-only">({t('social.newTab')})</span>{/if}
             </a>
           </li>
