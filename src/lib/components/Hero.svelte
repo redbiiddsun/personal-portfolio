@@ -75,7 +75,7 @@
   });
 </script>
 
-<section class="relative grid min-h-[max(100svh,720px)] place-items-center overflow-clip max-md:min-h-[max(100svh,780px)]" id="top" data-theme="light" bind:this={hero}>
+<section class="relative grid min-h-[max(100svh,720px)] place-items-center overflow-clip max-md:min-h-svh" id="top" data-theme="light" bind:this={hero}>
   <div class="pointer-events-none absolute inset-0">
     {#each heroShots as card, index (card.title)}
       <div
@@ -84,7 +84,7 @@
           card.isDesktopOnly && 'max-md:hidden',
           /* Mobile: pin each remaining card to a corner, inside the screen edges and clear of the fixed nav. */
           card.side === 'left' ? 'max-md:left-3!' : 'max-md:right-3!',
-          card.offsetY > LOW_CARD_OFFSET ? 'max-md:top-auto! max-md:-bottom-10' : 'max-md:top-[88px]!',
+          card.offsetY > LOW_CARD_OFFSET ? 'max-md:top-auto! max-md:-bottom-20' : 'max-md:top-[88px]!',
         ]}
         style="{card.side}:{card.offsetX}%;top:{card.offsetY}%;--w:{card.width}px;--h:{card.height}px;--r:{card.rotation}deg;--i:{index}"
         bind:this={cards[index]}
@@ -109,8 +109,9 @@
       </div>
     {/each}
   </div>
+  <!-- Mobile padding: 220px clears the corner cards pinned at 88px, 72px clears the scroll hint; together they fit a 667px-tall screen. -->
   <div
-    class="relative z-2 max-w-[760px] px-4 pt-[120px] pb-20 text-center *:translate-y-[18px] *:opacity-0 *:transition-[opacity,translate] *:duration-900 *:ease-smooth in-[.ready]:*:translate-y-0 in-[.ready]:*:opacity-100 [&>:nth-child(2)]:delay-100 [&>:nth-child(3)]:delay-200 [&>:nth-child(4)]:delay-300 max-md:py-[150px]"
+    class="relative z-2 max-w-[760px] px-4 pt-[120px] pb-20 text-center *:translate-y-[18px] *:opacity-0 *:transition-[opacity,translate] *:duration-900 *:ease-smooth in-[.ready]:*:translate-y-0 in-[.ready]:*:opacity-100 [&>:nth-child(2)]:delay-100 [&>:nth-child(3)]:delay-200 [&>:nth-child(4)]:delay-300 max-md:pt-[220px] max-md:pb-[72px]"
   >
     <h1 class="mb-[22px] text-[clamp(40px,5.6vw,74px)] leading-[1.15] font-medium tracking-[-.025em]">
       <span>{t('hero.l1')}</span><br />
