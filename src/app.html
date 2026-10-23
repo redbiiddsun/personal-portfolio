@@ -1,7 +1,25 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- Charset first: browsers only look for it in the first 1024 bytes. -->
   <meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <!-- Runs only on the production host; keep the hostname in sync with SITE_URL in src/lib/data.ts. -->
+  <script>
+    (function () {
+      if (location.hostname !== 'redbiiddsun.com') return;
+      window.dataLayer = window.dataLayer || [];
+      window.gtag = function gtag(){ dataLayer.push(arguments); };
+      var gtagLoader = document.createElement('script');
+      gtagLoader.async = true;
+      gtagLoader.src = 'https://www.googletagmanager.com/gtag/js?id=G-BB9H2QXLCQ';
+      document.head.appendChild(gtagLoader);
+
+      gtag('js', new Date());
+
+      gtag('config', 'G-BB9H2QXLCQ');
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" type="image/png" href="%sveltekit.assets%/favicon.png" />
   <link rel="apple-touch-icon" href="%sveltekit.assets%/apple-touch-icon.png" />
