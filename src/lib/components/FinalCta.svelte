@@ -3,6 +3,7 @@
   import { OWNER } from '#lib/data.ts';
   import { t } from '#lib/i18n.svelte.ts';
   import ContactButton from './ContactButton.svelte';
+  import Scribble from './Scribble.svelte';
 
   const COPIED_RESET_MS = 2000;
 
@@ -27,13 +28,7 @@
 <section class="px-4 pt-40 pb-[140px] text-center text-on-dark" data-theme="dark">
   <h2 class="h2" use:reveal>
     {t('final.title')} <span class="relative inline-block"><span>{t('final.titleMark')}</span>
-      <svg
-        class="scribble absolute -bottom-[.22em] left-0 h-[.3em] w-full fill-none stroke-blue stroke-3"
-        stroke-linecap="round"
-        viewBox="0 0 120 14"
-        preserveAspectRatio="none"
-        aria-hidden="true"
-      ><path d="M3 9c22-4 52-6 114-3" /></svg></span>
+      <Scribble class="w-full stroke-blue" /></span>
   </h2>
   <p class="lead mb-[38px] text-on-dark-2">{t('final.sub')}</p>
   <div class="relative inline-block" use:reveal>
