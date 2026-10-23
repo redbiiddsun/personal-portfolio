@@ -66,7 +66,7 @@
 <Nav />
 
 <main>
-  <div class="panel panel-light panel-top">
+  <div class="relative z-2 overflow-clip rounded-b-[44px] bg-paper">
     <Hero bind:cards={heroCardElements} />
     <People />
     <Showcase />

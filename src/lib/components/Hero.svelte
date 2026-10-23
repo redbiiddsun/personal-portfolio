@@ -8,7 +8,7 @@
   import TechStack from './TechStack.svelte';
   import ContactButton from './ContactButton.svelte';
 
-  /** Cards below this top offset (%) get the `hc-low` treatment. */
+  /** Cards below this top offset (%) drop to the bottom edge on mobile. */
   const LOW_CARD_OFFSET = 60;
   const POINTER_EASING = 0.06;
   const POINTER_SHIFT_PX = 18;
@@ -19,6 +19,7 @@
   const BOB_PERIOD_MS = 1500;
   /** Per-card phase offset so neighbouring cards don't bob in sync. */
   const BOB_PHASE_STEP = 1.7;
+  const CARD_IMAGE_CLASS = 'h-[calc(var(--h)*var(--k,1))] w-full rounded-[9px]';
 
   /** Card elements, exposed so the page-level intro can fly into them. */
   let { cards = $bindable([]) }: { cards?: HTMLElement[] } = $props();
@@ -67,52 +68,56 @@
   });
 </script>
 
-<section class="hero" id="top" data-theme="light" bind:this={hero}>
-  <div class="hero-cards">
+<section class="relative grid min-h-[max(100svh,720px)] place-items-center overflow-clip max-md:min-h-[max(100svh,780px)]" id="top" data-theme="light" bind:this={hero}>
+  <div class="pointer-events-none absolute inset-0">
     {#each heroShots as card, index (card.title)}
       <div
-        class="hc"
-        class:hc-mid={card.isMidLayer}
-        class:hc-low={card.offsetY > LOW_CARD_OFFSET}
+        class={[
+          'absolute w-[calc(var(--w)*var(--k,1))] opacity-0 transition-opacity duration-700 will-change-transform in-[.ready]:opacity-100 max-md:[--k:.58]',
+          card.isMidLayer && 'max-md:hidden',
+          card.offsetY > LOW_CARD_OFFSET && 'max-md:top-auto! max-md:-bottom-10',
+        ]}
         style="{card.side}:{card.offsetX}%;top:{card.offsetY}%;--w:{card.width}px;--h:{card.height}px;--r:{card.rotation}deg;--i:{index}"
         bind:this={cards[index]}
       >
-        <div class="hc-par" bind:this={parallaxLayers[index]}>
-          <div class="hc-body">
+        <div class="will-change-transform" bind:this={parallaxLayers[index]}>
+          <div class="rotate-(--r) rounded-[14px] bg-white px-[7px] pt-[7px] pb-2.5 shadow-[0_1px_2px_rgba(0,0,0,.06),0_14px_34px_rgba(20,24,33,.12)]">
             {#if 'src' in card}
-              <img class="hc-img" src={card.src} alt="" />
+              <img class="{CARD_IMAGE_CLASS} bg-soft object-cover" src={card.src} alt="" />
             {:else}
-              <DevArt kind={card.art} />
+              <DevArt kind={card.art} class={CARD_IMAGE_CLASS} />
             {/if}
-            <div class="hc-meta">
+            <div class="flex items-center gap-2 px-0.5 pt-2 max-md:hidden">
               {#if 'src' in card}
-                <span class="av"><img src={card.logo} alt="" /><i></i></span>
+                <span class="relative flex-none"><img class="size-[26px] rounded-full object-cover" src={card.logo} alt="" /><i class="absolute -right-px -bottom-px size-[9px] rounded-full border-2 border-white bg-[#22a447]"></i></span>
               {:else}
                 {@const tech = techStack.find((logo) => logo.name === card.tech)}
                 {#if tech}
-                  <span class="av av-tech"><svg viewBox="0 0 24 24" fill={tech.color} aria-hidden="true"><path d={tech.path} /></svg></span>
+                  <span class="flex-none"><svg class="size-[26px] rounded-full bg-soft p-1" viewBox="0 0 24 24" fill={tech.color} aria-hidden="true"><path d={tech.path} /></svg></span>
                 {/if}
               {/if}
-              <span><b>{card.title}</b><small>{card.caption}</small></span>
+              <span class="min-w-0"><b class="block truncate text-[11.5px] font-semibold">{card.title}</b><small class="block truncate text-[9.5px] text-ink-3">{card.caption}</small></span>
             </div>
           </div>
         </div>
       </div>
     {/each}
   </div>
-  <div class="hero-content">
-    <h1 class="hero-title">
+  <div
+    class="relative z-2 max-w-[760px] px-4 pt-[120px] pb-20 text-center *:translate-y-[18px] *:opacity-0 *:transition-[opacity,translate] *:duration-900 *:ease-smooth in-[.ready]:*:translate-y-0 in-[.ready]:*:opacity-100 [&>:nth-child(2)]:delay-100 [&>:nth-child(3)]:delay-200 [&>:nth-child(4)]:delay-300 max-md:py-[150px]"
+  >
+    <h1 class="mb-[22px] text-[clamp(40px,5.6vw,74px)] leading-[1.15] font-medium tracking-[-.025em]">
       <span>{t('hero.l1')}</span><br />
       <span>{t('hero.l2a')}</span>
       <RotatingWord />
       <span>{t('hero.l2b')}</span>
     </h1>
-    <p class="hero-sub">{t('hero.sub')}</p>
+    <p class="mb-[30px] text-[clamp(15px,1.3vw,17px)] text-ink-2">{t('hero.sub')}</p>
     <TechStack />
-    <ContactButton isLarge extraClass="hero-cta" id="heroCta" />
+    <ContactButton isLarge id="heroCta" />
   </div>
-  <a class="scroll-hint" href="#people">
+  <a class="absolute bottom-[26px] left-1/2 z-2 grid -translate-x-1/2 justify-items-center gap-1 text-sm text-ink-3 no-underline" href="#people">
     <span>{t('scroll')}</span>
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 5 5 5-5M7 13l5 5 5-5"/></svg>
+    <svg class="size-4 animate-bob fill-none stroke-current stroke-[1.8]" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 7 5 5 5-5M7 13l5 5 5-5"/></svg>
   </a>
 </section>

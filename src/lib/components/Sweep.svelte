@@ -16,4 +16,4 @@
   );
 </script>
 
-<span class="sweep">{#each graphemes as grapheme, index (index)}{#if grapheme === ' '}{' '}{:else}<span style="--i:{index};--c:{SWEEP_COLORS[index % SWEEP_COLORS.length]}">{grapheme}</span>{/if}{/each}</span>
+<span class="sweep font-semibold text-white">{#each graphemes as grapheme, index (index)}{#if grapheme === ' '}{' '}{:else}<span style="--i:{index};--c:{SWEEP_COLORS[index % SWEEP_COLORS.length]}">{grapheme}</span>{/if}{/each}</span>

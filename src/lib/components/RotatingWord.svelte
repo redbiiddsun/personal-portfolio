@@ -33,4 +33,7 @@
   });
 </script>
 
-<span class="word-slot" bind:this={slot}><span class="word">{rotatingWords[0]}</span></span>
+<span
+  class="relative inline-block h-[1.15em] align-top transition-[width] duration-650 ease-[cubic-bezier(.6,0,.2,1)]"
+  bind:this={slot}
+><span class="word">{rotatingWords[0]}</span></span>

@@ -22,7 +22,7 @@
   const RADIUS_WIDTH_RATIO = 0.32;
   const RADIUS_HEIGHT_RATIO = 0.34;
   const FADE_OUT_MS = 600;
-  /** Memoji fade-out duration; drives the `.intro-greeting` fade via `--memoji-fade`. */
+  /** Memoji fade-out duration; drives the greeting fade via `--memoji-fade`. */
   const MEMOJI_FADE_MS = 600;
   /** Give up on the greeting if it hasn't finished by now (slow network, stalled decode). */
   const MEMOJI_MAX_MS = 4500;
@@ -47,11 +47,13 @@
   const HELLO_STROKE = 5;
   const HELLO_WRITTEN_MS =
     (HELLO_TEXT.length - 1) * HELLO_LETTER_STAGGER_MS + HELLO_LETTER_DRAW_MS + HELLO_FILL_MS;
-  /** Once written, a colour ripple runs through the letters, like the `.sweep` words in Features. */
-  const HELLO_SWEEP_MS = 1600;
-  const HELLO_SWEEP_STAGGER_MS = 60;
+  /** Once written in ink, colour fills each letter in turn, left to right, and stays. */
+  const HELLO_COLOR_MS = 400;
+  const HELLO_COLOR_STAGGER_MS = 80;
+  /** Hold the finished, coloured greeting on screen this long before the intro fades. */
+  const HELLO_HOLD_MS = 900;
   const HELLO_DURATION_MS =
-    HELLO_WRITTEN_MS + (HELLO_TEXT.length - 1) * HELLO_SWEEP_STAGGER_MS + HELLO_SWEEP_MS;
+    HELLO_WRITTEN_MS + (HELLO_TEXT.length - 1) * HELLO_COLOR_STAGGER_MS + HELLO_COLOR_MS + HELLO_HOLD_MS;
   /** Don't hold the intro hostage to a slow font download. */
   const HELLO_FONT_MAX_WAIT_MS = 1500;
 
@@ -90,7 +92,7 @@
     });
     document.body.offsetWidth; // commit start positions before transitioning
     cards.forEach((card, index) => {
-      card.style.transition = `transform ${FLY_HOME_MS}ms var(--ease) ${index * FLY_STAGGER_MS}ms`;
+      card.style.transition = `transform ${FLY_HOME_MS}ms var(--ease-smooth) ${index * FLY_STAGGER_MS}ms`;
       card.style.transform = '';
     });
   };
@@ -118,7 +120,7 @@
       body.add('ready');
       return;
     }
-    body.add('intro-on');
+    body.add('overflow-hidden');
     radius = Math.min(innerWidth * RADIUS_WIDTH_RATIO, innerHeight * RADIUS_HEIGHT_RATIO, MAX_RADIUS_PX);
     // Fetch the ring shots while the greeting plays, so the ring appears fully loaded.
     heroShots.forEach((shot) => {
@@ -133,7 +135,7 @@
       cancelAnimationFrame(frame);
       flyCardsHome();
       isGone = true;
-      body.remove('intro-on');
+      body.remove('overflow-hidden');
       body.add('ready');
       setTimeout(() => (isRemoved = true), FADE_OUT_MS);
     };
@@ -173,8 +175,7 @@
   <!-- Click skips the intro; it's aria-hidden decoration, so no keyboard path is needed. -->
   <!-- svelte-ignore a11y_click_events_have_key_events, a11y_no_static_element_interactions -->
   <div
-    class="intro"
-    class:gone={isGone}
+    class={['fixed inset-0 z-100 grid cursor-pointer place-items-center bg-white transition-opacity duration-500 motion-reduce:hidden', isGone && 'pointer-events-none opacity-0']}
     style:transition={isGone ? 'none' : undefined}
     style:opacity={isGone ? '0' : undefined}
     aria-hidden="true"
@@ -182,9 +183,15 @@
   >
     {#if isMemojiShown}
       <!-- Safari plays the HEVC-with-alpha original; other browsers skip it (unknown type) and use VP9 alpha. -->
-      <div class="intro-greeting" class:out={isMemojiFading} style:--memoji-fade="{MEMOJI_FADE_MS}ms">
+      <div
+        class={[
+          'grid w-full justify-items-center transition-[opacity,scale] duration-(--memoji-fade) ease-smooth [--memoji-width:min(560px,92vw)]',
+          isMemojiFading && 'scale-92 opacity-0',
+        ]}
+        style:--memoji-fade="{MEMOJI_FADE_MS}ms"
+      >
         <video
-          class="intro-memoji"
+          class="h-auto w-(--memoji-width)"
           bind:this={memoji}
           width="640"
           height="480"
@@ -197,8 +204,7 @@
           <source src="/intro/memoji.webm" type="video/webm" />
         </video>
         <svg
-          class="intro-hello"
-          class:drawing={isHelloDrawing}
+          class={['intro-hello mt-[calc(var(--memoji-width)*-.12)] w-[min(760px,94vw)] overflow-visible', isHelloDrawing && 'drawing']}
           viewBox="0 0 760 130"
           style:--hello-font={HELLO_FONT}
           style:--hello-stroke={HELLO_STROKE}
@@ -206,22 +212,22 @@
           style:--letter-stagger="{HELLO_LETTER_STAGGER_MS}ms"
           style:--fill="{HELLO_FILL_MS}ms"
           style:--fill-delay="{HELLO_WRITTEN_MS - HELLO_FILL_MS}ms"
-          style:--sweep="{HELLO_SWEEP_MS}ms"
-          style:--sweep-delay="{HELLO_WRITTEN_MS}ms"
-          style:--sweep-stagger="{HELLO_SWEEP_STAGGER_MS}ms"
+          style:--color="{HELLO_COLOR_MS}ms"
+          style:--color-delay="{HELLO_WRITTEN_MS}ms"
+          style:--color-stagger="{HELLO_COLOR_STAGGER_MS}ms"
         >
           <text x="380" y="95" text-anchor="middle">{#each HELLO_TEXT as letter, index (index)}<tspan style:--i={index} style:--outline={HELLO_OUTLINE_LENGTHS[letter] ?? 0} style:--c={SWEEP_COLORS[index % SWEEP_COLORS.length]}>{letter}</tspan>{/each}</text>
         </svg>
       </div>
     {:else}
-      <div class="intro-ring" bind:this={ring} style:transform="rotate({angle}deg)">
+      <div class="relative size-0" bind:this={ring} style:transform="rotate({angle}deg)">
         {#if radius}
           {#each heroShots as card, index (card.title)}
-            <div class="ri" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
+            <div class="ri absolute top-0 left-0 h-[88px] w-[72px] overflow-hidden rounded-md bg-soft shadow-[0_6px_18px_rgba(0,0,0,.14)]" style="--a:{slotAngle(index)}deg;--R:{radius}px;--d:{index * STAGGER_MS}ms">
               {#if 'src' in card}
-                <img src={card.src} alt="" />
+                <img class="size-full object-cover" src={card.src} alt="" />
               {:else}
-                <DevArt kind={card.art} />
+                <DevArt kind={card.art} class="h-full [--dev-text:3.5px]" />
               {/if}
             </div>
           {/each}
