@@ -6,7 +6,7 @@ export const OWNER = {
   name: 'Phanasorn Srisayam',
   nickname: 'Sun',
   title: 'Full-stack developer',
-  email: 'sunphanasorn@gmail.com',
+  email: 'info@redbiiddsun.com',
 };
 
 /** Public origin, no trailing slash; used for canonical, Open Graph and the sitemap. */
