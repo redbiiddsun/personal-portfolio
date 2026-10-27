@@ -8,7 +8,8 @@
   <!-- Analytics cookies stay off until the visitor accepts in CookieConsent.svelte (storage key "consent", see src/lib/consent.svelte.ts); the choice goes to Google Consent Mode v2 and Clarity's Consent API v2 (consentv2). -->
   <script>
     (function () {
-      if (location.hostname !== 'redbiiddsun.com') return;
+      // No analytics or session recording on the admin pages.
+      if (location.hostname !== 'redbiiddsun.com' || location.pathname.startsWith('/admin')) return;
       window.dataLayer = window.dataLayer || [];
       window.gtag = function gtag(){ dataLayer.push(arguments); };
       var hasConsent = false;
