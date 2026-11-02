@@ -1,0 +1,22 @@
+# Dokploy: point the Compose app at docker/docker-compose.yml, set VITE_API_URL and API_URL
+# in the app's environment, and add the domain in the UI (Dokploy's Traefik routes it to port 80).
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:?set VITE_API_URL, e.g. https://api.redbiiddsun.com}
+    environment:
+      # Where nginx forwards /api/*. Same value as VITE_API_URL unless the API is reachable
+      # over the internal network (e.g. http://api:3000).
+      API_URL: ${API_URL:?set API_URL, e.g. https://api.redbiiddsun.com}
+    expose:
+      - 80
+    restart: unless-stopped
+    networks:
+      - dokploy-network
+
+networks:
+  dokploy-network:
+    external: true

@@ -1,0 +1,52 @@
+server {
+  listen 80;
+  server_name _;
+  root /usr/share/nginx/html;
+
+  gzip on;
+  gzip_types text/css application/javascript application/json image/svg+xml;
+  gzip_min_length 1024;
+
+  # Same headers as vercel.json.
+  add_header X-Content-Type-Options nosniff always;
+  add_header Referrer-Policy strict-origin-when-cross-origin always;
+  add_header Content-Security-Policy "frame-ancestors 'none'" always;
+
+  # Same rewrite as vercel.json: /api/* -> the API, so the admin token stays same-origin.
+  location /api/ {
+    proxy_pass ${API_URL}/;
+    proxy_set_header Host $proxy_host;
+    # Without SNI an https upstream answers 421 Misdirected Request.
+    proxy_ssl_server_name on;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+  }
+
+  # Hashed filenames never change contents. nginx drops inherited add_header once a
+  # location sets its own, so the headers above are repeated here.
+  location /_app/immutable/ {
+    add_header Cache-Control "public, max-age=31536000, immutable" always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header Content-Security-Policy "frame-ancestors 'none'" always;
+  }
+
+  # cleanUrls: one URL per page, so /admin/ and /admin.html redirect to /admin.
+  location ~ ^(?<no_slash_path>/.+)/$ {
+    return 301 $no_slash_path$is_args$args;
+  }
+
+  location ~ ^(?<clean_path>/.*)\.html$ {
+    return 301 $clean_path$is_args$args;
+  }
+
+  # cleanUrls: /admin serves admin.html. The shell is always revalidated so it can never
+  # outlive the hashed assets it references. Headers repeated for the reason given above.
+  location / {
+    try_files $uri $uri.html $uri/index.html =404;
+    add_header Cache-Control "public, max-age=0, must-revalidate" always;
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+    add_header Content-Security-Policy "frame-ancestors 'none'" always;
+  }
+}
