@@ -25,7 +25,7 @@ src/
     robots.txt, sitemap.xml
 static/                    Images, videos, favicon, og.jpg
 vercel.json                /api → API rewrite, security headers
-vite.config.js             Dev proxy /api → localhost:3000
+vite.config.js             Dev proxy /api → VITE_API_URL (default localhost:3000)
 ```
 
 ## Prerequisites
@@ -49,7 +49,7 @@ npm run dev          # http://localhost:5173
 ```
 
 - The home page works straight away, no backend needed.
-- `/admin` calls same-origin `/api/*`, which Vite proxies to `http://localhost:3000/*` (stripping `/api`). Start redbiiddsun-service on port 3000 first, or login will fail.
+- `/admin` calls same-origin `/api/*`, which Vite proxies to `http://localhost:3000/*` by default (stripping `/api`). Start redbiiddsun-service on port 3000 first, or login will fail.
 - If the API runs on another port, set `VITE_API_URL` in `.env`.
 - The OAuth provider settings (Google / LINE / TikTok) in the admin show `VITE_API_URL` as the callback URL. Register that URL with each provider.
 - Analytics (GA4 / Clarity) is intentionally **off** on localhost.
@@ -100,7 +100,8 @@ What `vercel.json` does:
 The API (redbiiddsun-service) must be ready first:
 
 - Running at `https://api.redbiiddsun.com`
-- Its `API_PUBLIC_URL` matches `PRODUCTION_API_URL`, since that is where OAuth providers send callbacks
+- Its `API_PUBLIC_URL` matches `VITE_API_URL` (and the `/api` rewrite destination in `vercel.json`), since that is where OAuth providers send callbacks
+- `VITE_API_URL=https://api.redbiiddsun.com` is set in the Vercel project env (the build bakes it in; `/admin` fails at runtime without it)
 - An admin account exists for login
 
 Analytics only runs when the hostname is `redbiiddsun.com` and the path is not `/admin`, and sets cookies only after the visitor accepts (Google Consent Mode v2 + Clarity Consent API). IDs in `src/app.html`: GA4 `G-BB9H2QXLCQ`, Clarity `z2d1cdsh94`.
