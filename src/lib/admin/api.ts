@@ -2,12 +2,16 @@
 // Requests go to same-origin `/api`: vercel.json rewrites it to the API in production, vite.config.js proxies it in dev,
 // so the admin token never crosses origins and the API needs no CORS for /admin.
 import { goto } from '$app/navigation';
-import { LOCAL_API_URL, PRODUCTION_API_URL } from '#lib/admin/api-origins.ts';
+import { DEV_API_URL } from '#lib/admin/api-origins.ts';
 
 const API_BASE = '/api';
 // The API's own origin (its API_PUBLIC_URL env var), where providers send OAuth callbacks. Not `/api`: that prefix only
 // exists for the browser's proxied calls.
-export const API_PUBLIC_URL = import.meta.env.DEV ? LOCAL_API_URL : PRODUCTION_API_URL;
+const apiPublicUrl = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? DEV_API_URL : '');
+if (!apiPublicUrl) {
+  throw new Error('VITE_API_URL is not set; a build needs the API origin (see .env.example).');
+}
+export const API_PUBLIC_URL = apiPublicUrl;
 
 export const ADMIN_HOME_PATH = '/admin';
 export const LOGIN_PATH = '/admin/login';

@@ -17,7 +17,7 @@ src/
     types.ts               Types for data.ts
     components/            Home page sections
     admin/                 Admin API client and admin components
-      api-origins.ts       API URLs (local / production)
+      api-origins.ts       Dev fallback API URL (VITE_API_URL overrides it)
       api.ts               Fetch wrapper, session token, every endpoint
   routes/
     +page.svelte           Home page (prerendered to HTML at build time)
@@ -39,7 +39,7 @@ vite.config.js             Dev proxy /api → localhost:3000
 | A Vercel account linked to this repo | Production deploys | |
 | DNS for `redbiiddsun.com` pointing at Vercel | Production | Analytics and SEO are tied to this hostname |
 
-**There is no `.env` file.** Values that differ between local and production are hard-coded (see [Values to keep in sync](#values-to-keep-in-sync)).
+**`VITE_API_URL`** is the only env var: the origin of redbiiddsun-service. Copy `.env.example` to `.env` to change it; local development can leave it unset. Other values that differ between local and production are hard-coded (see [Values to keep in sync](#values-to-keep-in-sync)).
 
 ## Local development
 
@@ -50,8 +50,8 @@ npm run dev          # http://localhost:5173
 
 - The home page works straight away, no backend needed.
 - `/admin` calls same-origin `/api/*`, which Vite proxies to `http://localhost:3000/*` (stripping `/api`). Start redbiiddsun-service on port 3000 first, or login will fail.
-- If the API runs on another port, change `LOCAL_API_URL` in `src/lib/admin/api-origins.ts`.
-- The OAuth provider settings (Google / LINE / TikTok) in the admin show the callback URL as `LOCAL_API_URL` in dev and `PRODUCTION_API_URL` in builds. Register that URL with each provider.
+- If the API runs on another port, set `VITE_API_URL` in `.env`.
+- The OAuth provider settings (Google / LINE / TikTok) in the admin show `VITE_API_URL` as the callback URL. Register that URL with each provider.
 - Analytics (GA4 / Clarity) is intentionally **off** on localhost.
 
 ## Testing
@@ -115,13 +115,13 @@ vercel --prod    # production
 
 ## Values to keep in sync
 
-There are no env vars, so changing a domain means editing several places together:
+Changing a domain means editing several places together:
 
 | Value | Where |
 | --- | --- |
 | Site domain | `SITE_URL` in `src/lib/data.ts` and the hostname check in `src/app.html` |
-| Production API URL | `PRODUCTION_API_URL` in `src/lib/admin/api-origins.ts` and the rewrite in `vercel.json` |
-| Local API URL | `LOCAL_API_URL` in `src/lib/admin/api-origins.ts` |
+| Production API URL | `VITE_API_URL` in the Vercel project env and the rewrite in `vercel.json` |
+| Local API URL | `VITE_API_URL` in `.env` (defaults to `DEV_API_URL` in `src/lib/admin/api-origins.ts`) |
 
 ## Editing content
 
