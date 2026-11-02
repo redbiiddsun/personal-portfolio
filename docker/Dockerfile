@@ -16,4 +16,5 @@ RUN npm run build
 FROM nginx:1.27-alpine
 # nginx's entrypoint runs envsubst over templates/, so API_URL is read at container start.
 COPY docker/nginx.conf.template /etc/nginx/templates/default.conf.template
+COPY docker/security-headers.conf /etc/nginx/security-headers.conf
 COPY --from=build /app/build /usr/share/nginx/html
